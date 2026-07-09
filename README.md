@@ -1,6 +1,6 @@
 # 🏛️ Amisphere • Classical University Portal
 
-![Amisphere University Portal Preview](/amisphere-preview.png)
+![Amisphere University Portal Preview](public/amisphere-preview.png)
 
 > **Volume I • Scholarly & Executive University Architecture**  
 > *Inspired by the Amizone Ecosystem of Amity University, engineered with state-of-the-art full-stack reactive architecture, classical aesthetics, and complete multi-role statutory authorization.*
