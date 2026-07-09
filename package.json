@@ -1,0 +1,33 @@
+{
+  "name": "amisphere-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "postinstall": "node -e \"const fs = require('fs'); const file = 'node_modules/next/dist/compiled/browserslist/index.js'; if (fs.existsSync(file)) { const content = fs.readFileSync(file, 'utf8'); if (content.includes('1764339020978<')) { fs.writeFileSync(file, content.replace('1764339020978<(new Date).setMonth((new Date).getMonth()-2)&&console.warn', 'false&&console.warn')); } }\""
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.88.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.561.0",
+    "next": "16.0.10",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.10.38",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
