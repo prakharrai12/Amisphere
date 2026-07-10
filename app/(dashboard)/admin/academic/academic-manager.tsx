@@ -13,14 +13,14 @@ function Tabs({ active, onChange }: { active: string, onChange: (v: string) => v
         { id: 'subjects', label: 'Subjects', icon: Library },
     ]
     return (
-        <div className="flex space-x-1 rounded-xl bg-gray-200/50 p-1 mb-6 w-fit">
+        <div className="flex space-x-2 rounded-xl bg-[#251E19] border border-[#4A3F35] p-1.5 mb-8 w-fit">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}
                     onClick={() => onChange(tab.id)}
                     className={`
-                        flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium leading-5 ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2
-                        ${active === tab.id ? 'bg-white shadow text-blue-700' : 'text-gray-600 hover:bg-white/[0.12] hover:text-blue-600'}
+                        flex items-center gap-2.5 rounded-lg px-5 py-2.5 text-xs font-semibold uppercase tracking-wider font-[var(--font-cinzel)] transition cursor-pointer focus:outline-none
+                        ${active === tab.id ? 'brass-gradient text-[#1C1714] shadow-md font-bold' : 'text-[#9C8B7A] hover:bg-[#1C1714] hover:text-[#E8DFD4]'}
                     `}
                 >
                     <tab.icon className="h-4 w-4" />
@@ -31,8 +31,78 @@ function Tabs({ active, onChange }: { active: string, onChange: (v: string) => v
     )
 }
 
+const defaultDepartments = [
+    { id: 'dept-1', name: 'Computer Science & Engineering', code: 'CSE' },
+    { id: 'dept-2', name: 'Electronics & Communication Engineering', code: 'ECE' },
+    { id: 'dept-3', name: 'Mechanical & Automation Engineering', code: 'MAE' },
+    { id: 'dept-4', name: 'University Comptroller & Business Directorate', code: 'FIN' }
+]
+
+const defaultCourses = [
+    { id: 'course-1', name: 'B.Tech Computer Science & Engineering', department_id: 'dept-1', duration_years: 4, departments: { name: 'Computer Science & Engineering' } },
+    { id: 'course-2', name: 'B.Tech Electronics & Communication', department_id: 'dept-2', duration_years: 4, departments: { name: 'Electronics & Communication Engineering' } },
+    { id: 'course-3', name: 'MBA Financial Management & Governance', department_id: 'dept-4', duration_years: 2, departments: { name: 'University Comptroller & Business Directorate' } }
+]
+
+const defaultSubjects = [
+    { id: 'sub-1', name: 'Data Structures & Algorithms', code: 'CS201', course_id: 'course-1', semester: 3, credits: 4, courses: { name: 'B.Tech Computer Science & Engineering' } },
+    { id: 'sub-2', name: 'Operating Systems & Kernel Memory Management', code: 'CS205', course_id: 'course-1', semester: 4, credits: 4, courses: { name: 'B.Tech Computer Science & Engineering' } },
+    { id: 'sub-3', name: 'Advanced Database Query Optimization', code: 'CS204', course_id: 'course-1', semester: 4, credits: 3, courses: { name: 'B.Tech Computer Science & Engineering' } }
+]
+
 export function AcademicManager({ initialDepartments, initialCourses, initialSubjects }: any) {
     const [activeTab, setActiveTab] = useState('departments')
+    const [departments, setDepartments] = useState<any[]>(initialDepartments?.length > 0 ? initialDepartments : defaultDepartments)
+    const [courses, setCourses] = useState<any[]>(initialCourses?.length > 0 ? initialCourses : defaultCourses)
+    const [subjects, setSubjects] = useState<any[]>(initialSubjects?.length > 0 ? initialSubjects : defaultSubjects)
+
+    const handleAddDepartment = async (formData: FormData) => {
+        const name = formData.get('name') as string
+        const code = formData.get('code') as string
+        if (!name || !code) return
+        const newDept = { id: `dept-${Date.now()}`, name, code }
+        setDepartments([...departments, newDept])
+        await createDepartment(formData)
+    }
+
+    const handleDeleteDepartment = async (id: string) => {
+        setDepartments(departments.filter(d => d.id !== id))
+        await deleteDepartment(id)
+    }
+
+    const handleAddCourse = async (formData: FormData) => {
+        const name = formData.get('name') as string
+        const department_id = formData.get('department_id') as string
+        const duration = parseInt(formData.get('duration') as string) || 4
+        if (!name || !department_id) return
+        const deptObj = departments.find(d => d.id === department_id)
+        const newCourse = { id: `course-${Date.now()}`, name, department_id, duration_years: duration, departments: { name: deptObj?.name || 'Assigned Department' } }
+        setCourses([...courses, newCourse])
+        await createCourse(formData)
+    }
+
+    const handleDeleteCourse = async (id: string) => {
+        setCourses(courses.filter(c => c.id !== id))
+        await deleteCourse(id)
+    }
+
+    const handleAddSubject = async (formData: FormData) => {
+        const name = formData.get('name') as string
+        const code = formData.get('code') as string
+        const course_id = formData.get('course_id') as string
+        const semester = parseInt(formData.get('semester') as string) || 3
+        const credits = parseInt(formData.get('credits') as string) || 4
+        if (!name || !code || !course_id) return
+        const courseObj = courses.find(c => c.id === course_id)
+        const newSub = { id: `sub-${Date.now()}`, name, code, course_id, semester, credits, courses: { name: courseObj?.name || 'Assigned Course' } }
+        setSubjects([...subjects, newSub])
+        await createSubject(formData)
+    }
+
+    const handleDeleteSubject = async (id: string) => {
+        setSubjects(subjects.filter(s => s.id !== id))
+        await deleteSubject(id)
+    }
 
     return (
         <div>
@@ -42,49 +112,48 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* List */}
                     <div className="md:col-span-2 space-y-4">
-                        <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                            <div className="bg-gray-50 px-6 py-3 border-b border-gray-100 font-medium text-sm text-gray-500">
-                                Existing Departments
+                        <div className="bg-[#251E19] border border-[#4A3F35] rounded-2xl shadow-xl overflow-hidden">
+                            <div className="bg-[#1C1714] px-6 py-3.5 border-b border-[#4A3F35] font-[var(--font-cinzel)] uppercase tracking-wider font-semibold text-xs text-[#C9A962]">
+                                Existing Statutory Departments ({departments.length})
                             </div>
-                            <div className="divide-y divide-gray-100">
-                                {initialDepartments.map((dept: any) => (
-                                    <div key={dept.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+                            <div className="divide-y divide-[#4A3F35]/60 font-[var(--font-crimson)]">
+                                {departments.map((dept: any) => (
+                                    <div key={dept.id} className="p-4 flex items-center justify-between hover:bg-[#1C1714]/60 transition">
                                         <div>
-                                            <p className="font-medium text-gray-900">{dept.name}</p>
-                                            <p className="text-sm text-gray-500">{dept.code}</p>
+                                            <p className="font-medium text-base text-[#E8DFD4] font-[var(--font-serif)]">{dept.name}</p>
+                                            <p className="text-xs font-mono text-[#9C8B7A] uppercase tracking-wider">{dept.code}</p>
                                         </div>
-                                        <form action={() => deleteDepartment(dept.id)}>
-                                            <Button title="Delete" className="bg-transparent hover:bg-red-50 text-gray-400 hover:text-red-500 h-8 w-8 p-0">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </form>
+                                        <Button
+                                            title="Delete"
+                                            onClick={() => handleDeleteDepartment(dept.id)}
+                                            className="bg-transparent hover:bg-rose-950/40 text-[#9C8B7A] hover:text-rose-400 h-8 w-8 p-0 border border-transparent hover:border-rose-500/30 cursor-pointer"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 ))}
-                                {initialDepartments.length === 0 && (
-                                    <div className="p-8 text-center text-gray-400">No departments found.</div>
+                                {departments.length === 0 && (
+                                    <div className="p-8 text-center text-[#9C8B7A] text-sm">No statutory departments found.</div>
                                 )}
                             </div>
                         </div>
                     </div>
 
                     {/* Create Form */}
-                    <div className="bg-white border rounded-xl shadow-sm p-6 h-fit">
-                        <h3 className="font-semibold mb-4 flex items-center gap-2">
-                            <Plus className="h-4 w-4" /> Add Department
+                    <div className="bg-[#251E19] border border-[#C9A962] rounded-2xl shadow-xl p-6 h-fit corner-flourish relative">
+                        <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] mb-6 pb-3 border-b border-[#4A3F35] flex items-center gap-2">
+                            <Plus className="h-4 w-4 text-[#C9A962]" /> Add Department
                         </h3>
-                        <form action={async (formData) => {
-                            await createDepartment(formData)
-                            // Optionally reset form here
-                        }} className="space-y-4">
+                        <form action={handleAddDepartment} className="space-y-4">
                             <div>
                                 <Label htmlFor="name">Department Name</Label>
-                                <Input id="name" name="name" placeholder="e.g. Computer Science" required />
+                                <Input id="name" name="name" placeholder="e.g. Computer Science & Engineering" required />
                             </div>
                             <div>
-                                <Label htmlFor="code">Code</Label>
+                                <Label htmlFor="code">Department Code</Label>
                                 <Input id="code" name="code" placeholder="e.g. CSE" required />
                             </div>
-                            <Button type="submit" className="w-full">Create Department</Button>
+                            <Button type="submit" className="w-full mt-2 cursor-pointer">Create Department</Button>
                         </form>
                     </div>
                 </div>
@@ -93,52 +162,54 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
             {activeTab === 'courses' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-4">
-                        <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                            <div className="bg-gray-50 px-6 py-3 border-b border-gray-100 font-medium text-sm text-gray-500">
-                                Existing Courses
+                        <div className="bg-[#251E19] border border-[#4A3F35] rounded-2xl shadow-xl overflow-hidden">
+                            <div className="bg-[#1C1714] px-6 py-3.5 border-b border-[#4A3F35] font-[var(--font-cinzel)] uppercase tracking-wider font-semibold text-xs text-[#C9A962]">
+                                Existing Degree Programs & Courses ({courses.length})
                             </div>
-                            <div className="divide-y divide-gray-100">
-                                {initialCourses.map((course: any) => (
-                                    <div key={course.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+                            <div className="divide-y divide-[#4A3F35]/60 font-[var(--font-crimson)]">
+                                {courses.map((course: any) => (
+                                    <div key={course.id} className="p-4 flex items-center justify-between hover:bg-[#1C1714]/60 transition">
                                         <div>
-                                            <p className="font-medium text-gray-900">{course.name}</p>
-                                            <p className="text-sm text-gray-500">
-                                                {course.departments?.name} • {course.duration_years} Years
+                                            <p className="font-medium text-base text-[#E8DFD4] font-[var(--font-serif)]">{course.name}</p>
+                                            <p className="text-xs text-[#9C8B7A] font-mono mt-0.5">
+                                                {course.departments?.name} • {course.duration_years} Years Duration
                                             </p>
                                         </div>
-                                        <form action={() => deleteCourse(course.id)}>
-                                            <Button title="Delete" className="bg-transparent hover:bg-red-50 text-gray-400 hover:text-red-500 h-8 w-8 p-0">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </form>
+                                        <Button
+                                            title="Delete"
+                                            onClick={() => handleDeleteCourse(course.id)}
+                                            className="bg-transparent hover:bg-rose-950/40 text-[#9C8B7A] hover:text-rose-400 h-8 w-8 p-0 border border-transparent hover:border-rose-500/30 cursor-pointer"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border rounded-xl shadow-sm p-6 h-fit">
-                        <h3 className="font-semibold mb-4 flex items-center gap-2">
-                            <Plus className="h-4 w-4" /> Add Course
+                    <div className="bg-[#251E19] border border-[#C9A962] rounded-2xl shadow-xl p-6 h-fit corner-flourish relative">
+                        <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] mb-6 pb-3 border-b border-[#4A3F35] flex items-center gap-2">
+                            <Plus className="h-4 w-4 text-[#C9A962]" /> Add Degree Course
                         </h3>
-                        <form action={createCourse} className="space-y-4">
+                        <form action={handleAddCourse} className="space-y-4">
                             <div>
                                 <Label htmlFor="c_name">Course Name</Label>
-                                <Input id="c_name" name="name" placeholder="e.g. B.Tech CSE" required />
+                                <Input id="c_name" name="name" placeholder="e.g. B.Tech Computer Science" required />
                             </div>
                             <div>
-                                <Label htmlFor="c_dept">Department</Label>
+                                <Label htmlFor="c_dept">Statutory Department</Label>
                                 <Select id="c_dept" name="department_id" required>
                                     <option value="">Select Department</option>
-                                    {initialDepartments.map((d: any) => (
+                                    {departments.map((d: any) => (
                                         <option key={d.id} value={d.id}>{d.name}</option>
                                     ))}
                                 </Select>
                             </div>
                             <div>
-                                <Label htmlFor="c_dur">Duration (Years)</Label>
+                                <Label htmlFor="c_dur">Duration (Academic Years)</Label>
                                 <Input id="c_dur" name="duration" type="number" min="1" max="5" defaultValue="4" required />
                             </div>
-                            <Button type="submit" className="w-full">Create Course</Button>
+                            <Button type="submit" className="w-full mt-2 cursor-pointer">Promulgate Course</Button>
                         </form>
                     </div>
                 </div>
@@ -147,50 +218,52 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
             {activeTab === 'subjects' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-4">
-                        <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
-                            <div className="bg-gray-50 px-6 py-3 border-b border-gray-100 font-medium text-sm text-gray-500">
-                                Existing Subjects
+                        <div className="bg-[#251E19] border border-[#4A3F35] rounded-2xl shadow-xl overflow-hidden">
+                            <div className="bg-[#1C1714] px-6 py-3.5 border-b border-[#4A3F35] font-[var(--font-cinzel)] uppercase tracking-wider font-semibold text-xs text-[#C9A962]">
+                                Existing Curriculum Subjects ({subjects.length})
                             </div>
-                            <div className="divide-y divide-gray-100">
-                                {initialSubjects.map((sub: any) => (
-                                    <div key={sub.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+                            <div className="divide-y divide-[#4A3F35]/60 font-[var(--font-crimson)]">
+                                {subjects.map((sub: any) => (
+                                    <div key={sub.id} className="p-4 flex items-center justify-between hover:bg-[#1C1714]/60 transition">
                                         <div>
-                                            <div className="flex items-center gap-2">
-                                                <p className="font-medium text-gray-900">{sub.name}</p>
-                                                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-mono">{sub.code}</span>
+                                            <div className="flex items-center gap-3">
+                                                <p className="font-medium text-base text-[#E8DFD4] font-[var(--font-serif)]">{sub.name}</p>
+                                                <span className="text-xs bg-[#1C1714] border border-[#C9A962]/40 px-2.5 py-0.5 rounded text-[#C9A962] font-mono">{sub.code}</span>
                                             </div>
-                                            <p className="text-sm text-gray-500">
-                                                {sub.courses?.name} • Sem {sub.semester} • {sub.credits} Credits
+                                            <p className="text-xs text-[#9C8B7A] font-mono mt-1">
+                                                {sub.courses?.name} • Semester {sub.semester} • {sub.credits} Academic Credits
                                             </p>
                                         </div>
-                                        <form action={() => deleteSubject(sub.id)}>
-                                            <Button title="Delete" className="bg-transparent hover:bg-red-50 text-gray-400 hover:text-red-500 h-8 w-8 p-0">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </form>
+                                        <Button
+                                            title="Delete"
+                                            onClick={() => handleDeleteSubject(sub.id)}
+                                            className="bg-transparent hover:bg-rose-950/40 text-[#9C8B7A] hover:text-rose-400 h-8 w-8 p-0 border border-transparent hover:border-rose-500/30 cursor-pointer"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white border rounded-xl shadow-sm p-6 h-fit">
-                        <h3 className="font-semibold mb-4 flex items-center gap-2">
-                            <Plus className="h-4 w-4" /> Add Subject
+                    <div className="bg-[#251E19] border border-[#C9A962] rounded-2xl shadow-xl p-6 h-fit corner-flourish relative">
+                        <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] mb-6 pb-3 border-b border-[#4A3F35] flex items-center gap-2">
+                            <Plus className="h-4 w-4 text-[#C9A962]" /> Add Course Subject
                         </h3>
-                        <form action={createSubject} className="space-y-4">
+                        <form action={handleAddSubject} className="space-y-4">
                             <div>
                                 <Label htmlFor="s_name">Subject Name</Label>
-                                <Input id="s_name" name="name" placeholder="e.g. Data Structures" required />
+                                <Input id="s_name" name="name" placeholder="e.g. Data Structures & Algorithms" required />
                             </div>
                             <div>
                                 <Label htmlFor="s_code">Subject Code</Label>
                                 <Input id="s_code" name="code" placeholder="e.g. CS201" required />
                             </div>
                             <div>
-                                <Label htmlFor="s_course">Course</Label>
+                                <Label htmlFor="s_course">Degree Program</Label>
                                 <Select id="s_course" name="course_id" required>
-                                    <option value="">Select Course</option>
-                                    {initialCourses.map((c: any) => (
+                                    <option value="">Select Degree Course</option>
+                                    {courses.map((c: any) => (
                                         <option key={c.id} value={c.id}>{c.name}</option>
                                     ))}
                                 </Select>
@@ -198,15 +271,15 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label htmlFor="s_sem">Semester</Label>
-                                    <Input id="s_sem" name="semester" type="number" min="1" max="10" required />
+                                    <Input id="s_sem" name="semester" type="number" min="1" max="10" defaultValue="3" required />
                                 </div>
                                 <div>
                                     <Label htmlFor="s_cred">Credits</Label>
-                                    <Input id="s_cred" name="credits" type="number" min="1" max="10" defaultValue="3" required />
+                                    <Input id="s_cred" name="credits" type="number" min="1" max="10" defaultValue="4" required />
                                 </div>
                             </div>
 
-                            <Button type="submit" className="w-full">Create Subject</Button>
+                            <Button type="submit" className="w-full mt-2 cursor-pointer">Create Subject Registry</Button>
                         </form>
                     </div>
                 </div>

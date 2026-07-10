@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { CheckSquare, CheckCircle2, XCircle, AlertCircle, ShieldCheck, Search, Filter } from 'lucide-react'
+import { CheckSquare, CheckCircle2, XCircle, AlertCircle, ShieldCheck, Search, Filter, Download } from 'lucide-react'
 import { useRegularizationStore } from '@/lib/hybrid-store'
+import { exportToCSV } from '@/lib/export-utils'
 
 export default function HODRequestsPage() {
   const { requests, updateRequestStatus } = useRegularizationStore()
@@ -11,6 +12,24 @@ export default function HODRequestsPage() {
   const [remarksModal, setRemarksModal] = useState<{ reqId: string; action: 'Approved' | 'Rejected' } | null>(null)
   const [remarksText, setRemarksText] = useState('')
   const [toast, setToast] = useState<string | null>(null)
+
+  const handleExportCSV = () => {
+    const exportData = filteredRequests.map(r => ({
+      'Petition ID': r.id,
+      'Scholar Name': r.studentName,
+      'Subject Code': r.subjectCode,
+      'Subject Name': r.subjectName,
+      'Date Missed': r.dateMissed,
+      'Reason Type': r.reasonType,
+      'Explanation': r.explanation,
+      'Status': r.status,
+      'Remarks': r.remarks || 'N/A',
+      'Submitted At': r.submittedAt
+    }))
+    exportToCSV(exportData, `HOD_Regularization_Ledger_${new Date().toISOString().split('T')[0]}`)
+    setToast(`Exported ${filteredRequests.length} petition records to CSV ledger.`)
+    setTimeout(() => setToast(null), 5000)
+  }
 
   const handleSignOff = (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,7 +68,7 @@ export default function HODRequestsPage() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-[#4A3F35]">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A962] font-[var(--font-cinzel)]">
             <CheckSquare className="h-4 w-4" />
@@ -63,15 +82,15 @@ export default function HODRequestsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {(['All', 'Pending Review', 'Approved', 'Rejected'] as const).map(st => (
             <button
               key={st}
               onClick={() => setFilterStatus(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer ${
                 filterStatus === st
                   ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
-                  : 'bg-[#251E19] text-[#9C8B7A] border border-[#4A3F35]'
+                  : 'bg-[#251E19] text-[#9C8B7A] border border-[#4A3F35] hover:border-[#C9A962]/40'
               }`}
             >
               {st}
@@ -80,8 +99,8 @@ export default function HODRequestsPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4 p-4 rounded-xl border border-[#4A3F35] bg-[#251E19]">
-        <div className="relative w-full md:w-96">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-[#4A3F35] bg-[#251E19] flex-wrap">
+        <div className="relative w-full sm:w-80 min-w-[200px]">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#9C8B7A]" />
           <input
             type="text"
@@ -91,7 +110,16 @@ export default function HODRequestsPage() {
             className="w-full pl-9 pr-4 py-2 rounded-lg border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] text-xs outline-none focus:border-[#C9A962]"
           />
         </div>
-        <span className="text-xs font-mono text-[#9C8B7A]">{filteredRequests.length} Petitions Matching</span>
+        <div className="flex flex-wrap items-center gap-3 justify-between sm:justify-end w-full sm:w-auto">
+          <span className="text-xs font-mono text-[#9C8B7A]">{filteredRequests.length} Petitions Matching</span>
+          <button
+            onClick={handleExportCSV}
+            className="px-4 py-2 rounded-md border border-[#C9A962] text-[#C9A962] bg-[#1C1714] hover:bg-[#C9A962]/10 text-xs shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0 font-semibold transition font-[var(--font-cinzel)] uppercase"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>Export CSV</span>
+          </button>
+        </div>
       </div>
 
       <div className="rounded-2xl border border-[#4A3F35] bg-[#251E19] p-6 shadow-md overflow-x-auto">

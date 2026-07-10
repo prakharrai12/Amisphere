@@ -69,7 +69,7 @@ export default function HODDashboard() {
               </span>
             </div>
             <h1 className="mt-3 text-4xl font-normal text-[#E8DFD4] font-[var(--font-serif)]">
-              Prof. (Dr.) Vikramaditya Verma, HOD
+              Prof. Gaurav Mishra Sir, HOD
             </h1>
             <p className="mt-2 text-base text-[#9C8B7A] font-[var(--font-crimson)] max-w-3xl leading-relaxed">
               Executive oversight of academic operations, faculty rosters, and statutory regularization petitions for the Department of Computer Science & Engineering.
@@ -215,7 +215,7 @@ export default function HODDashboard() {
             <div className="space-y-2.5 text-xs text-[#9C8B7A] font-[var(--font-crimson)]">
               <div className="p-3 rounded-lg bg-[#1C1714] border border-[#4A3F35]/50 flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-[#C9A962] shrink-0 mt-0.5" />
-                <span>Prof. Nikhil Sharma submitted the midterm evaluation report for CS201.</span>
+                <span>Prof. D.P. Singh Sir submitted the midterm evaluation report for CS201.</span>
               </div>
               <div className="p-3 rounded-lg bg-[#1C1714] border border-[#4A3F35]/50 flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-[#C9A962] shrink-0 mt-0.5" />

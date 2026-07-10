@@ -93,6 +93,7 @@ const studentRoutes: RouteSection[] = [
             { label: 'Weekly Timetable', icon: Calendar, href: '/student/timetable' },
             { label: 'Attendance & Requests', icon: ClipboardList, href: '/student/attendance' },
             { label: 'Enrolled Courses', icon: BookOpen, href: '/student/courses' },
+            { label: 'Course Assignments', icon: FileText, href: '/student/assignments' },
             { label: 'Semester Grade Sheet', icon: GraduationCap, href: '/student/results' },
         ]
     },
@@ -117,7 +118,7 @@ const hodRoutes: RouteSection[] = [
         volume: 'Volume II: Governance',
         items: [
             { label: 'Regularization Queue', icon: CheckSquare, href: '/hod/requests' },
-            { label: 'Faculty Supervision', icon: Users, href: '/hod/faculty-supervision' },
+            { label: 'Faculty Supervision', icon: Users, href: '/hod/faculty' },
             { label: 'Attendance Coverage', icon: FileSpreadsheet, href: '/hod/attendance' },
         ]
     },

@@ -114,7 +114,7 @@ export default function StudentFacultyPage() {
               <div className="p-3 rounded-xl bg-[#1C1714] border border-[#4A3F35] text-xs space-y-1">
                 <span className="text-[#9C8B7A]">Recipient Official Email:</span>
                 <p className="font-mono text-[#C9A962] font-semibold">{selectedFaculty.email}</p>
-                <p className="text-[10px] text-[#9C8B7A]">From: Scholar Aarav Mehta (Enrollment: A2040522104)</p>
+                <p className="text-[10px] text-[#9C8B7A]">From: Scholar Prakhar Rai (Enrollment: A2040522104)</p>
               </div>
 
               <div>

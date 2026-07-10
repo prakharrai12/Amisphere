@@ -339,6 +339,56 @@ export type Database = {
                     },
                 ]
             }
+            regularization_requests: {
+                Row: {
+                    date_missed: string
+                    explanation: string
+                    id: string
+                    reason_type: string
+                    remarks: string | null
+                    status: string
+                    student_id: string | null
+                    student_name: string
+                    subject_code: string
+                    subject_name: string
+                    submitted_at: string
+                }
+                Insert: {
+                    date_missed: string
+                    explanation: string
+                    id?: string
+                    reason_type: string
+                    remarks?: string | null
+                    status?: string
+                    student_id?: string | null
+                    student_name: string
+                    subject_code: string
+                    subject_name: string
+                    submitted_at?: string
+                }
+                Update: {
+                    date_missed?: string
+                    explanation?: string
+                    id?: string
+                    reason_type?: string
+                    remarks?: string | null
+                    status?: string
+                    student_id?: string | null
+                    student_name?: string
+                    subject_code?: string
+                    subject_name?: string
+                    submitted_at?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "regularization_requests_student_id_fkey"
+                        columns: ["student_id"]
+                        isOneToOne: false
+                        referencedRelation: "users"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
             subjects: {
                 Row: {
                     code: string
@@ -463,7 +513,7 @@ export type Database = {
             [_ in never]: never
         }
         Enums: {
-            user_role: "admin" | "faculty" | "student" | "staff" | "parent"
+            user_role: "admin" | "faculty" | "student" | "staff" | "parent" | "hod"
         }
         CompositeTypes: {
             [_ in never]: never

@@ -4,9 +4,9 @@ import { Button, Select, Label, Input } from '@/components/ui/simple'
 import { Trash2, UserPlus, Users, GraduationCap, ShieldCheck } from 'lucide-react'
 
 const demoFallbackAllocations = [
-  { id: 'alc-1', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Prof. Nikhil Sharma', email: 'nsharma@faculty.amity.edu' }, subjects: { name: 'Data Structures & Algorithms', code: 'CS201', courses: { name: 'B.Tech Computer Science' } } },
-  { id: 'alc-2', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Dr. Vikramaditya Verma', email: 'vverma@hod.amity.edu' }, subjects: { name: 'Advanced Database Systems', code: 'CS305', courses: { name: 'B.Tech Computer Science' } } },
-  { id: 'alc-3', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Dr. Ananya Iyer', email: 'aiyer@faculty.amity.edu' }, subjects: { name: 'Operating Systems & Kernel', code: 'CS204', courses: { name: 'B.Tech Computer Science' } } },
+  { id: 'alc-1', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Prof. D.P. Singh Sir', email: 'dpsingh@faculty.amity.edu' }, subjects: { name: 'Data Structures & Algorithms', code: 'CS201', courses: { name: 'B.Tech Computer Science' } } },
+  { id: 'alc-2', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Prof. Gaurav Mishra Sir', email: 'gmishra@hod.amity.edu' }, subjects: { name: 'Discrete Numerical Mathematics', code: 'MTH201', courses: { name: 'B.Tech Computer Science' } } },
+  { id: 'alc-3', academic_year: '2026-2027 (Odd Sem)', users: { full_name: 'Prof. Nitin Kumar Sir', email: 'nkumar@faculty.amity.edu' }, subjects: { name: 'Advanced Database Systems', code: 'CS204', courses: { name: 'B.Tech Computer Science' } } },
 ]
 
 export default async function AllocationPage() {

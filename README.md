@@ -35,7 +35,7 @@ Reimagined with our signature **Academia / Classical Scholarship** aesthetic, Am
 * **Disbursement & Pay Slip Ledger (`/faculty/salary`)**: Itemized earnings (`Basic Pay ₹74,000`, `AGP ₹16,000`, `DA @ 38%`) vs. statutory deductions (`EPF`, `TDS`), net salary calculation (`₹1,28,450`), and an interactive **Printable Wax-Sealed Pay Slip Modal**.
 
 ### 3. 👑 Head of Department Secretariat (`Volume I Executive HOD Portal`)
-* **Departmental Operations Overview (`/hod`)**: Executive metrics for Computer Science (`Prof. Vikramaditya Verma, HOD`), faculty strength counters (`24 Professors`), average departmental attendance quota (`88.4%`), and live regularization sign-off queues.
+* **Departmental Operations Overview (`/hod`)**: Executive metrics for Computer Science (`Prof. Gaurav Mishra Sir, HOD`), faculty strength counters (`24 Professors`), average departmental attendance quota (`88.4%`), and live regularization sign-off queues.
 * **Centralized Regularization Sign-Off Center (`/hod/requests`)**: Searchable, filterable adjudication queue where the HOD applies **Counter-Seal Edicts** under Section 14 to authorize or reject student attendance appeals.
 * **Faculty Supervision (`/hod/faculty`)**: Comprehensive audit matrix tracking assigned teaching loads and punctuality compliance indices across the faculty body.
 
@@ -88,14 +88,14 @@ Reimagined with our signature **Academia / Classical Scholarship** aesthetic, Am
 
 ## 🔑 Demo Access Credentials
 
-The entrance ledger (`/login`) is styled as an antique university registration volume. You can authenticate into any governance role instantly using these built-in test credentials (password for all roles: `amisphere2026`):
+The entrance ledger (`/login`) allows instant role selection or authentication into any governance role using these credentials:
 
-| Role | Email Address | Redirect Destination | Key Capabilities |
+| Role | Email Address | Password | Key Capabilities |
 | :--- | :--- | :--- | :--- |
-| **Student** | `student@amity.edu` | `/student` | File attendance petitions, download `.wax-seal` fee receipts, view timetable & SGPA. |
-| **Faculty** | `faculty@amity.edu` | `/faculty` | Mark daily student attendance roster (`P/A/L/M`), review petitions, print pay slips. |
-| **HOD** | `hod@amity.edu` | `/hod` | Counter-seal student petitions (`Ordinance IV`), audit faculty teaching loads. |
-| **Admin** | `admin@amity.edu` | `/admin` | Manage master user roles (`Student/Faculty/HOD/Admin`), allocate faculty subjects. |
+| **Student** | `student@amisphere.edu` | `student123` | File attendance petitions, download `.wax-seal` fee receipts, view timetable & SGPA. |
+| **Faculty** | `faculty@amisphere.edu` | `faculty123` | Mark daily student attendance roster (`P/A/L/M`), review petitions, print pay slips. |
+| **HOD** | `hod@amisphere.edu` | `hod123` | Counter-seal student petitions (`Ordinance IV`), audit faculty teaching loads. |
+| **Admin** | `admin@amisphere.edu` | `admin123` | Manage master user roles (`Student/Faculty/HOD/Admin`), allocate faculty subjects. |
 
 ---
 

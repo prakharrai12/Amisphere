@@ -70,7 +70,7 @@ export default function StudentResultsPage() {
       <div className="rounded-2xl border border-[#C9A962] bg-[#251E19] p-8 shadow-xl relative corner-flourish flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2">
           <span className="px-3 py-1 rounded text-[10px] font-mono font-semibold uppercase bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40">
-            Enrolled Scholar: Aarav Mehta • Roll Number: A2040522104
+            Enrolled Scholar: Prakhar Rai • Roll Number: A2040522104
           </span>
           <h2 className="text-3xl font-normal font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-3">
             <span>Cumulative Grade Point Average: 9.38</span>

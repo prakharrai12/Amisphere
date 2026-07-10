@@ -19,7 +19,7 @@ export default function StudentAttendancePage() {
     const subj = demoSubjects.find(s => s.code === subjectCode)
     const newReq = addRequest({
       studentId: 'student-1',
-      studentName: 'Aarav Mehta (Enrollment: A2040522104)',
+      studentName: 'Prakhar Rai (Enrollment: A2040522104)',
       subjectCode,
       subjectName: subj?.name || 'Academic Subject',
       dateMissed,

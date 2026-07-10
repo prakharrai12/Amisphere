@@ -44,7 +44,7 @@ export default function FacultyDashboard() {
               </span>
             </div>
             <h1 className="mt-3 text-4xl font-normal text-[#E8DFD4] font-[var(--font-serif)]">
-              Prof. Nikhil Sharma, Associate Professor
+              Prof. D.P. Singh Sir, Associate Professor
             </h1>
             <p className="mt-2 text-base text-[#9C8B7A] font-[var(--font-crimson)] max-w-3xl leading-relaxed">
               Welcome to the Amisphere Faculty Directorate. Manage your lecture roster, verify or adjudicate student attendance regularizations, and review your compensation statements.

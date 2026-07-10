@@ -144,11 +144,11 @@ export default function AdminDashboard() {
 
             <div className="space-y-3 text-xs font-[var(--font-crimson)]">
               <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35]/70 flex items-center justify-between">
-                <span className="text-[#E8DFD4]">New Scholar Enrollment: Aarav Mehta (Roll: A2040522104) created.</span>
+                <span className="text-[#E8DFD4]">New Scholar Enrollment: Prakhar Rai (Roll: A2040522104) created.</span>
                 <span className="text-[#9C8B7A] font-mono">10 mins ago</span>
               </div>
               <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35]/70 flex items-center justify-between">
-                <span className="text-[#E8DFD4]">Faculty Roster Allocation: CS201 assigned to Prof. Nikhil Sharma.</span>
+                <span className="text-[#E8DFD4]">Faculty Roster Allocation: CS201 assigned to Prof. D.P. Singh Sir.</span>
                 <span className="text-[#9C8B7A] font-mono">1 hour ago</span>
               </div>
               <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35]/70 flex items-center justify-between">

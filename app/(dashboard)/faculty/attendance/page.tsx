@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { CheckSquare, Save, CheckCircle2, XCircle, AlertCircle, ShieldCheck, Users, Search } from 'lucide-react'
+import { CheckSquare, Save, CheckCircle2, XCircle, AlertCircle, ShieldCheck, Users, Search, Download } from 'lucide-react'
 import { useRegularizationStore, useRosterStore } from '@/lib/hybrid-store'
+import { exportToCSV } from '@/lib/export-utils'
 
 export default function FacultyAttendancePage() {
   const { requests, updateRequestStatus } = useRegularizationStore()
@@ -16,6 +17,19 @@ export default function FacultyAttendancePage() {
 
   const handleSaveRegister = () => {
     setToast(`Daily attendance register for ${selectedSubject} (Date: ${new Date().toISOString().split('T')[0]}) sealed and synchronized with the University Database.`)
+    setTimeout(() => setToast(null), 5000)
+  }
+
+  const handleExportCSV = () => {
+    const exportData = filteredRoster.map(s => ({
+      'Roll Number': s.rollNo || s.rollNumber || 'N/A',
+      'Scholar Name': s.name,
+      'Attendance Status': s.status,
+      'Subject Code': selectedSubject,
+      'Date Recorded': new Date().toISOString().split('T')[0]
+    }))
+    exportToCSV(exportData, `${selectedSubject}_Roster_${new Date().toISOString().split('T')[0]}`)
+    setToast(`Exported ${filteredRoster.length} scholar records to CSV ledger.`)
     setTimeout(() => setToast(null), 5000)
   }
 
@@ -49,7 +63,7 @@ export default function FacultyAttendancePage() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-[#4A3F35]">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A962] font-[var(--font-cinzel)]">
             <CheckSquare className="h-4 w-4" />
@@ -63,7 +77,7 @@ export default function FacultyAttendancePage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
           <button
             onClick={() => setActiveTab('roster')}
             className={`px-4 py-2.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer ${
@@ -76,7 +90,7 @@ export default function FacultyAttendancePage() {
           </button>
           <button
             onClick={() => setActiveTab('petitions')}
-            className={`px-4 py-2.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer relative ${
+            className={`px-4 py-2.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer relative flex items-center gap-2 ${
               activeTab === 'petitions'
                 ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/50 shadow-md'
                 : 'bg-[#251E19] text-[#9C8B7A] border border-[#4A3F35]'
@@ -84,7 +98,7 @@ export default function FacultyAttendancePage() {
           >
             <span>Petition Adjudication</span>
             {pendingPetitions.length > 0 && (
-              <span className="ml-2 px-2 py-0.5 rounded-full text-[10px] bg-[#8B2635] text-white">
+              <span suppressHydrationWarning className="px-2 py-0.5 rounded-full text-[10px] bg-[#8B2635] text-white">
                 {pendingPetitions.length}
               </span>
             )}
@@ -95,8 +109,8 @@ export default function FacultyAttendancePage() {
       {activeTab === 'roster' ? (
         /* Daily Roster Editor */
         <div className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl border border-[#4A3F35] bg-[#251E19] shadow-sm">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 p-5 rounded-2xl border border-[#4A3F35] bg-[#251E19] shadow-sm flex-wrap">
+            <div className="flex flex-wrap items-center gap-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
                   Active Subject
@@ -104,34 +118,42 @@ export default function FacultyAttendancePage() {
                 <select
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2 text-xs font-mono outline-none focus:border-[#C9A962]"
+                  className="rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs font-mono outline-none focus:border-[#C9A962]"
                 >
                   <option value="CS201">CS201 - Data Structures & Algorithms (Mon/Wed/Fri)</option>
                   <option value="CS201-L">CS201-L - Data Structures Lab (Tue/Thu)</option>
                 </select>
               </div>
 
-              <div className="hidden md:block border-l border-[#4A3F35] pl-4">
+              <div className="hidden sm:block border-l border-[#4A3F35] pl-4">
                 <span className="text-xs text-[#9C8B7A] block">Date:</span>
                 <span className="text-xs font-mono text-[#E8DFD4] font-semibold">{new Date().toISOString().split('T')[0]}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="relative">
+            <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
+              <div className="relative w-full sm:w-64 min-w-[180px]">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#9C8B7A]" />
                 <input
                   type="text"
                   placeholder="Filter by roll number or scholar name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-4 py-2 rounded-lg border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] text-xs outline-none focus:border-[#C9A962] w-64"
+                  className="w-full pl-9 pr-4 py-2 rounded-lg border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] text-xs outline-none focus:border-[#C9A962]"
                 />
               </div>
 
               <button
+                onClick={handleExportCSV}
+                className="px-4 py-2 rounded-md border border-[#C9A962] text-[#C9A962] bg-[#1C1714] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer shrink-0 font-semibold transition"
+              >
+                <Download className="h-4 w-4" />
+                <span>Export CSV</span>
+              </button>
+
+              <button
                 onClick={handleSaveRegister}
-                className="px-5 py-2.5 rounded-md brass-gradient text-xs shadow-md flex items-center gap-2 cursor-pointer shrink-0 font-semibold"
+                className="px-5 py-2 rounded-md brass-gradient text-xs shadow-md flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase tracking-wider"
               >
                 <Save className="h-4 w-4 text-[#1C1714]" />
                 <span>Seal Daily Register</span>

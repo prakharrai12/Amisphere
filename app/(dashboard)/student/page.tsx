@@ -46,7 +46,7 @@ export default function StudentDashboard() {
               </span>
             </div>
             <h1 className="mt-3 text-4xl font-normal text-[#E8DFD4] font-[var(--font-serif)]">
-              Welcome back, Scholar Aarav Mehta
+              Welcome back, Scholar Prakhar Rai
             </h1>
             <p className="mt-2 text-base text-[#9C8B7A] font-[var(--font-crimson)] max-w-3xl leading-relaxed">
               You are viewing your official Amisphere academic registry for the Odd Semester 2026. Consult your weekly timetable, monitor your attendance quotas, and file necessary regularization petitions below.

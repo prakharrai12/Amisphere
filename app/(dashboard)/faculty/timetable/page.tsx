@@ -8,7 +8,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 export default function FacultyTimetablePage() {
   const [selectedDay, setSelectedDay] = useState('Monday')
-  const mySchedule = demoWeeklyTimetable.filter(item => item.instructor.includes('Sharma'))
+  const mySchedule = demoWeeklyTimetable.filter(item => item.instructor.includes('Singh'))
   const daySchedule = mySchedule.filter(item => item.day === selectedDay)
 
   return (
@@ -23,7 +23,7 @@ export default function FacultyTimetablePage() {
             Teaching Schedule Matrix
           </h1>
           <p className="mt-1 text-sm text-[#9C8B7A] font-[var(--font-crimson)]">
-            Assigned lecture halls and laboratory slots for Prof. Nikhil Sharma (Odd Semester 2026). Total Weekly Load: 18 Hours.
+            Assigned lecture halls and laboratory slots for Prof. D.P. Singh Sir (Odd Semester 2026). Total Weekly Load: 18 Hours.
           </p>
         </div>
 
