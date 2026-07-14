@@ -47,6 +47,20 @@ export default function HODRequestsPage() {
     setTimeout(() => setToast(null), 5000)
   }
 
+  const handleBatchAdjudicate = (action: 'Approved' | 'Rejected') => {
+    const pending = requests.filter(r => r.status === 'Pending Review')
+    if (pending.length === 0) return
+    pending.forEach(r => {
+      updateRequestStatus(
+        r.id,
+        action,
+        action === 'Approved' ? 'Batch counter-sealed by HOD Secretariat.' : 'Batch rejected by HOD mandate.'
+      )
+    })
+    setToast(`Batch sign-off: ${pending.length} pending petitions recorded as ${action}.`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
   const filteredRequests = requests.filter(req => {
     const matchesStatus = filterStatus === 'All' || req.status === filterStatus
     const matchesSearch =
@@ -55,6 +69,10 @@ export default function HODRequestsPage() {
       req.id.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesStatus && matchesSearch
   })
+
+  const pendingCount = requests.filter(r => r.status === 'Pending Review').length
+  const approvedCount = requests.filter(r => r.status === 'Approved').length
+  const rejectedCount = requests.filter(r => r.status === 'Rejected').length
 
   return (
     <div className="p-8 space-y-8 min-h-screen">
@@ -111,6 +129,22 @@ export default function HODRequestsPage() {
           />
         </div>
         <div className="flex flex-wrap items-center gap-3 justify-between sm:justify-end w-full sm:w-auto">
+          {pendingCount > 0 && (
+            <>
+              <button
+                onClick={() => handleBatchAdjudicate('Approved')}
+                className="px-3.5 py-2 rounded-md border border-emerald-500/50 text-emerald-400 bg-[#1C1714] hover:bg-emerald-500/10 text-xs shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0 font-semibold transition"
+              >
+                <span>Approve All Pending ({pendingCount})</span>
+              </button>
+              <button
+                onClick={() => handleBatchAdjudicate('Rejected')}
+                className="px-3.5 py-2 rounded-md border border-rose-500/50 text-rose-400 bg-[#1C1714] hover:bg-rose-500/10 text-xs shadow-sm flex items-center gap-1.5 cursor-pointer shrink-0 font-semibold transition"
+              >
+                <span>Reject All Pending</span>
+              </button>
+            </>
+          )}
           <span className="text-xs font-mono text-[#9C8B7A]">{filteredRequests.length} Petitions Matching</span>
           <button
             onClick={handleExportCSV}
@@ -119,6 +153,16 @@ export default function HODRequestsPage() {
             <Download className="h-3.5 w-3.5" />
             <span>Export CSV</span>
           </button>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[#1C1714] border border-[#4A3F35] text-xs font-mono">
+        <span className="text-[#9C8B7A] uppercase font-[var(--font-cinzel)] tracking-wider">Department Adjudication Ledger</span>
+        <div className="flex items-center gap-6">
+          <span className="text-amber-400 font-bold">Pending: {pendingCount}</span>
+          <span className="text-emerald-400 font-bold">Approved: {approvedCount}</span>
+          <span className="text-rose-400 font-bold">Rejected: {rejectedCount}</span>
+          <span className="text-[#C9A962]">Total Filed: {requests.length}</span>
         </div>
       </div>
 
