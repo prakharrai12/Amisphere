@@ -8,11 +8,28 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 export default function StudentTimetablePage() {
   const [selectedDay, setSelectedDay] = useState('Monday')
+  const [showVenueModal, setShowVenueModal] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
   const daySchedule = demoWeeklyTimetable.filter(item => item.day === selectedDay)
 
+  const handleExportSchedule = () => {
+    setToast(`Weekly academic timetable exported to local calendar format (.ICS / CSV).`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
   return (
     <div className="p-8 space-y-8 min-h-screen">
+      {toast && (
+        <div className="p-4 rounded-xl border border-[#C9A962] bg-[#251E19] text-[#C9A962] flex items-center justify-between shadow-xl animate-fade-in">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 shrink-0" />
+            <span className="font-semibold text-xs">{toast}</span>
+          </div>
+          <button onClick={() => setToast(null)} className="text-[#9C8B7A] hover:text-[#E8DFD4] cursor-pointer">✕</button>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A962] font-[var(--font-cinzel)]">
@@ -27,20 +44,34 @@ export default function StudentTimetablePage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#251E19] p-1.5 rounded-xl border border-[#4A3F35]">
-          {days.map(day => (
-            <button
-              key={day}
-              onClick={() => setSelectedDay(day)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium font-[var(--font-cinzel)] uppercase tracking-wider transition ${
-                selectedDay === day
-                  ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
-                  : 'text-[#9C8B7A] hover:text-[#E8DFD4]'
-              }`}
-            >
-              {day.slice(0, 3)}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowVenueModal(true)}
+            className="px-4 py-2 rounded-lg border border-[#C9A962]/50 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>📍 Campus Room Finder</span>
+          </button>
+          <button
+            onClick={handleExportSchedule}
+            className="px-4 py-2 rounded-lg brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer shadow-md"
+          >
+            <span>Export Calendar</span>
+          </button>
+          <div className="flex items-center gap-1.5 bg-[#251E19] p-1 rounded-xl border border-[#4A3F35]">
+            {days.map(day => (
+              <button
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer ${
+                  selectedDay === day
+                    ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
+                    : 'text-[#9C8B7A] hover:text-[#E8DFD4]'
+                }`}
+              >
+                {day.slice(0, 3)}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -130,6 +161,40 @@ export default function StudentTimetablePage() {
           </tbody>
         </table>
       </div>
+
+      {showVenueModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-[#C9A962]" /> Campus Room & Block Directory
+              </h3>
+              <button onClick={() => setShowVenueModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm max-h-[50vh] overflow-y-auto pr-1 divide-y divide-[#4A3F35]/60">
+              <div className="py-2.5">
+                <p className="font-bold text-base text-[#C9A962]">LT-101 & LT-102 (Ramanujan Lecture Complex)</p>
+                <p className="text-xs text-[#E8DFD4]">Academic Block A, Ground & 1st Floor. Equipped with smart podiums and surround PA system.</p>
+              </div>
+              <div className="py-2.5">
+                <p className="font-bold text-base text-[#C9A962]">SL-204 & SL-205 (Systems Lab)</p>
+                <p className="text-xs text-[#E8DFD4]">Academic Block B, 2nd Floor. Dedicated high-performance Linux workstations for OS and DBMS practicals.</p>
+              </div>
+              <div className="py-2.5">
+                <p className="font-bold text-base text-[#C9A962]">CS-Sem-Hall (Turing Seminar Hall)</p>
+                <p className="text-xs text-[#E8DFD4]">Main Computer Science Building, 3rd Floor. Used for departmental colloquiums and guest seminars.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowVenueModal(false)}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
+            >
+              Close Directory
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
