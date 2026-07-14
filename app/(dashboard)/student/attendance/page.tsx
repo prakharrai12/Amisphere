@@ -236,9 +236,27 @@ export default function StudentAttendancePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
-                  Detailed Explanation & Evidence
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)]">
+                    Detailed Explanation & Evidence
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setExplanation("I was diagnosed with acute viral fever and advised strict bed rest by the University Medical Officer. Digital doctor certificate attached herewith.")}
+                      className="text-[10px] px-2 py-0.5 rounded bg-[#1C1714] border border-[#C9A962]/40 text-[#C9A962] hover:bg-[#C9A962]/10 cursor-pointer"
+                    >
+                      + Medical Template
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setExplanation("Represented Amisphere University at the Inter-University National Sports Championship under statutory Ordinance VII delegation.")}
+                      className="text-[10px] px-2 py-0.5 rounded bg-[#1C1714] border border-[#C9A962]/40 text-[#C9A962] hover:bg-[#C9A962]/10 cursor-pointer"
+                    >
+                      + Sports Template
+                    </button>
+                  </div>
+                </div>
                 <textarea
                   required
                   rows={4}
