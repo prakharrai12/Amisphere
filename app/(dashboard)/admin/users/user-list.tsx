@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Search, Shield, User, ShieldCheck, CheckCircle2, UserPlus, Mail, Copy, Sparkles, Key, X, FileText, Award } from 'lucide-react'
+import { Search, Shield, User, ShieldCheck, CheckCircle2, UserPlus, Mail, Copy, Sparkles, Key, X, FileText, Award, Trash2 } from 'lucide-react'
 
 const demoFallbackUsers = [
   { id: 'usr-1', full_name: 'Prakhar Rai', email: 'prakhar.rai@student.amity.edu', role: 'student', created_at: '2025-07-15T10:00:00Z', roll_no: 'A2040522104' },
@@ -39,26 +39,62 @@ export function UserList({ initialUsers }: { initialUsers: any[] }) {
   } | null>(null)
 
   // Load custom enrolled users from localStorage on mount
+  // Load custom enrolled users and role overrides from localStorage on mount
   useEffect(() => {
+    let currentUsers = [...usersList]
     const saved = localStorage.getItem('amisphere_enrolled_users')
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Merge avoiding duplicates
-          const existingIds = new Set(usersList.map(u => u.id))
-          const merged = [...parsed.filter((u: any) => !existingIds.has(u.id)), ...usersList]
-          setUsers(merged)
+          const existingIds = new Set(currentUsers.map(u => u.id))
+          currentUsers = [...parsed.filter((u: any) => !existingIds.has(u.id)), ...currentUsers]
         }
       } catch (e) {
         console.error('Error loading enrolled users:', e)
       }
     }
+
+    const overrides = JSON.parse(localStorage.getItem('amisphere_role_overrides') || '{}')
+    if (Object.keys(overrides).length > 0) {
+      currentUsers = currentUsers.map(u => overrides[u.id] ? { ...u, role: overrides[u.id] } : u)
+    }
+
+    setUsers(currentUsers)
   }, [])
 
   const handleRoleChange = (userId: string, newRoleValue: string) => {
-    setUsers(users.map(u => u.id === userId ? { ...u, role: newRoleValue } : u))
+    const updated = users.map(u => u.id === userId ? { ...u, role: newRoleValue } : u)
+    setUsers(updated)
+    const overrides = JSON.parse(localStorage.getItem('amisphere_role_overrides') || '{}')
+    overrides[userId] = newRoleValue
+    localStorage.setItem('amisphere_role_overrides', JSON.stringify(overrides))
+
+    const saved = localStorage.getItem('amisphere_enrolled_users')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        const updatedEnrolled = parsed.map((u: any) => u.id === userId ? { ...u, role: newRoleValue } : u)
+        localStorage.setItem('amisphere_enrolled_users', JSON.stringify(updatedEnrolled))
+      } catch (e) {}
+    }
+
     setToast(`User credentials for ID #${userId} successfully updated to role: ${newRoleValue.toUpperCase()}.`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
+  const handleDeleteUser = (userId: string, fullName: string) => {
+    const updated = users.filter(u => u.id !== userId)
+    setUsers(updated)
+    const saved = localStorage.getItem('amisphere_enrolled_users')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        const updatedEnrolled = parsed.filter((u: any) => u.id !== userId)
+        localStorage.setItem('amisphere_enrolled_users', JSON.stringify(updatedEnrolled))
+      } catch (e) {}
+    }
+    setToast(`User account "${fullName}" (#${userId}) has been archived from campus ledgers.`)
     setTimeout(() => setToast(null), 4000)
   }
 
@@ -209,6 +245,7 @@ export function UserList({ initialUsers }: { initialUsers: any[] }) {
               <th className="p-4">Roll / Employee Number</th>
               <th className="p-4">Assigned Portal Role</th>
               <th className="p-4">Date Created</th>
+              <th className="p-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#4A3F35]/60 font-[var(--font-crimson)] text-sm">
@@ -246,11 +283,21 @@ export function UserList({ initialUsers }: { initialUsers: any[] }) {
                 <td className="p-4 text-xs font-mono text-[#9C8B7A]">
                   {new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                 </td>
+                <td className="p-4 text-right">
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteUser(user.id, user.full_name || 'User')}
+                    title="Delete Account"
+                    className="p-1.5 rounded-lg border border-[#4A3F35] text-[#9C8B7A] hover:text-rose-400 hover:border-rose-500/40 hover:bg-[#1C1714] transition cursor-pointer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </td>
               </tr>
             ))}
             {filteredUsers.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-12 text-center text-[#9C8B7A] font-mono text-xs">
+                <td colSpan={5} className="p-12 text-center text-[#9C8B7A] font-mono text-xs">
                   No registered users match the current filter criteria.
                 </td>
               </tr>

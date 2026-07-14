@@ -73,7 +73,7 @@ export async function proxy(request: NextRequest) {
 
         // If demo user exists, check against currentPathRole
         if (demoUser) {
-            if (demoUser.role !== currentPathRole) {
+            if (demoUser.role !== currentPathRole && demoUser.role !== 'admin') {
                 return NextResponse.redirect(new URL(`/${demoUser.role}`, request.url))
             }
             return response
@@ -91,7 +91,7 @@ export async function proxy(request: NextRequest) {
             if (error || !userData) {
                 return NextResponse.redirect(new URL('/login', request.url))
             }
-            if (userRole !== currentPathRole) {
+            if (userRole !== currentPathRole && userRole !== 'admin') {
                 return NextResponse.redirect(new URL(`/${userRole}`, request.url))
             }
         }

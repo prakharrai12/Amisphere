@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useDepartmentsStore, useCoursesStore, useSubjectsStore } from '@/lib/hybrid-store'
 import { Button, Input, Label, Select } from '@/components/ui/simple'
 import { createDepartment, createCourse, createSubject, deleteDepartment, deleteCourse, deleteSubject } from '@/lib/actions/academic'
 import { Trash2, Plus, Building2, Book, Library } from 'lucide-react'
@@ -31,43 +32,23 @@ function Tabs({ active, onChange }: { active: string, onChange: (v: string) => v
     )
 }
 
-const defaultDepartments = [
-    { id: 'dept-1', name: 'Computer Science & Engineering', code: 'CSE' },
-    { id: 'dept-2', name: 'Electronics & Communication Engineering', code: 'ECE' },
-    { id: 'dept-3', name: 'Mechanical & Automation Engineering', code: 'MAE' },
-    { id: 'dept-4', name: 'University Comptroller & Business Directorate', code: 'FIN' }
-]
-
-const defaultCourses = [
-    { id: 'course-1', name: 'B.Tech Computer Science & Engineering', department_id: 'dept-1', duration_years: 4, departments: { name: 'Computer Science & Engineering' } },
-    { id: 'course-2', name: 'B.Tech Electronics & Communication', department_id: 'dept-2', duration_years: 4, departments: { name: 'Electronics & Communication Engineering' } },
-    { id: 'course-3', name: 'MBA Financial Management & Governance', department_id: 'dept-4', duration_years: 2, departments: { name: 'University Comptroller & Business Directorate' } }
-]
-
-const defaultSubjects = [
-    { id: 'sub-1', name: 'Data Structures & Algorithms', code: 'CS201', course_id: 'course-1', semester: 3, credits: 4, courses: { name: 'B.Tech Computer Science & Engineering' } },
-    { id: 'sub-2', name: 'Operating Systems & Kernel Memory Management', code: 'CS205', course_id: 'course-1', semester: 4, credits: 4, courses: { name: 'B.Tech Computer Science & Engineering' } },
-    { id: 'sub-3', name: 'Advanced Database Query Optimization', code: 'CS204', course_id: 'course-1', semester: 4, credits: 3, courses: { name: 'B.Tech Computer Science & Engineering' } }
-]
-
 export function AcademicManager({ initialDepartments, initialCourses, initialSubjects }: any) {
     const [activeTab, setActiveTab] = useState('departments')
-    const [departments, setDepartments] = useState<any[]>(initialDepartments?.length > 0 ? initialDepartments : defaultDepartments)
-    const [courses, setCourses] = useState<any[]>(initialCourses?.length > 0 ? initialCourses : defaultCourses)
-    const [subjects, setSubjects] = useState<any[]>(initialSubjects?.length > 0 ? initialSubjects : defaultSubjects)
+    const { departments, addDepartment, deleteDepartment: storeDelDept } = useDepartmentsStore()
+    const { courses, addCourse, deleteCourse: storeDelCourse } = useCoursesStore()
+    const { subjects, addSubject, deleteSubject: storeDelSubject } = useSubjectsStore()
 
     const handleAddDepartment = async (formData: FormData) => {
         const name = formData.get('name') as string
         const code = formData.get('code') as string
         if (!name || !code) return
-        const newDept = { id: `dept-${Date.now()}`, name, code }
-        setDepartments([...departments, newDept])
-        await createDepartment(formData)
+        addDepartment(name, code)
+        try { await createDepartment(formData) } catch {}
     }
 
     const handleDeleteDepartment = async (id: string) => {
-        setDepartments(departments.filter(d => d.id !== id))
-        await deleteDepartment(id)
+        storeDelDept(id)
+        try { await deleteDepartment(id) } catch {}
     }
 
     const handleAddCourse = async (formData: FormData) => {
@@ -75,15 +56,13 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
         const department_id = formData.get('department_id') as string
         const duration = parseInt(formData.get('duration') as string) || 4
         if (!name || !department_id) return
-        const deptObj = departments.find(d => d.id === department_id)
-        const newCourse = { id: `course-${Date.now()}`, name, department_id, duration_years: duration, departments: { name: deptObj?.name || 'Assigned Department' } }
-        setCourses([...courses, newCourse])
-        await createCourse(formData)
+        addCourse(name, department_id, duration)
+        try { await createCourse(formData) } catch {}
     }
 
     const handleDeleteCourse = async (id: string) => {
-        setCourses(courses.filter(c => c.id !== id))
-        await deleteCourse(id)
+        storeDelCourse(id)
+        try { await deleteCourse(id) } catch {}
     }
 
     const handleAddSubject = async (formData: FormData) => {
@@ -93,15 +72,13 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
         const semester = parseInt(formData.get('semester') as string) || 3
         const credits = parseInt(formData.get('credits') as string) || 4
         if (!name || !code || !course_id) return
-        const courseObj = courses.find(c => c.id === course_id)
-        const newSub = { id: `sub-${Date.now()}`, name, code, course_id, semester, credits, courses: { name: courseObj?.name || 'Assigned Course' } }
-        setSubjects([...subjects, newSub])
-        await createSubject(formData)
+        addSubject(name, code, course_id, semester, credits)
+        try { await createSubject(formData) } catch {}
     }
 
     const handleDeleteSubject = async (id: string) => {
-        setSubjects(subjects.filter(s => s.id !== id))
-        await deleteSubject(id)
+        storeDelSubject(id)
+        try { await deleteSubject(id) } catch {}
     }
 
     return (

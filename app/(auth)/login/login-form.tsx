@@ -10,6 +10,7 @@ const roleOptions: Array<{ value: AppRole; label: string; email: string; passwor
   { value: 'faculty', label: 'Faculty Workspace', email: 'faculty@amisphere.edu', password: 'faculty123' },
   { value: 'hod', label: 'HOD Department Office', email: 'hod@amisphere.edu', password: 'hod123' },
   { value: 'admin', label: 'Campus Administration', email: 'admin@amisphere.edu', password: 'admin123' },
+  { value: 'staff', label: 'Staff Operations', email: 'staff@amisphere.edu', password: 'staff123' },
 ]
 
 export function LoginForm() {

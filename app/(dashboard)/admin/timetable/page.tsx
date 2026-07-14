@@ -1,19 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Calendar, Clock, CheckCircle2, Plus, ShieldCheck, Users, BookOpen } from 'lucide-react'
-
-const initialMasterTimetable = [
-  { id: 'tt-1', day: 'Monday', time: '09:00 AM - 10:30 AM', subjectCode: 'CS201', subjectName: 'Data Structures & Algorithms', instructor: 'Prof. Nitin Kumar Sir', room: 'LT-102 (Senate Hall III)', status: 'Active Slot' },
-  { id: 'tt-2', day: 'Monday', time: '11:00 AM - 12:30 PM', subjectCode: 'CS205', subjectName: 'Operating Systems & Architecture', instructor: 'Prof. D.P. Singh Sir', room: 'LT-104 (Auditorium B)', status: 'Active Slot' },
-  { id: 'tt-3', day: 'Tuesday', time: '09:30 AM - 12:30 PM', subjectCode: 'CS201-L', subjectName: 'Data Structures Laboratory', instructor: 'Prof. Shalu Pal Mam', room: 'Computing Lab IV (Main Block)', status: 'Active Slot' },
-  { id: 'tt-4', day: 'Wednesday', time: '02:00 PM - 03:30 PM', subjectCode: 'CS204', subjectName: 'Advanced Database Systems', instructor: 'Prof. Gaurav Mishra Sir', room: 'LT-102 (Senate Hall III)', status: 'Active Slot' },
-  { id: 'tt-5', day: 'Thursday', time: '10:00 AM - 11:30 AM', subjectCode: 'MTH201', subjectName: 'Discrete Numerical Mathematics', instructor: 'Prof. Gaurav Mishra Sir', room: 'LT-201 (Academic Wing A)', status: 'Active Slot' },
-  { id: 'tt-6', day: 'Friday', time: '09:00 AM - 10:30 AM', subjectCode: 'CS201', subjectName: 'Data Structures & Algorithms', instructor: 'Prof. Nitin Kumar Sir', room: 'LT-102 (Senate Hall III)', status: 'Active Slot' },
-]
+import { useTimetableStore } from '@/lib/hybrid-store'
+import { Calendar, Clock, CheckCircle2, Plus, ShieldCheck, Users, BookOpen, Trash2 } from 'lucide-react'
 
 export default function AdminTimetablePage() {
-  const [timetable, setTimetable] = useState(initialMasterTimetable)
+  const { slots: timetable, addSlot, deleteSlot } = useTimetableStore()
   const [selectedDay, setSelectedDay] = useState<string>('All')
   const [showAddModal, setShowAddModal] = useState(false)
   const [newDay, setNewDay] = useState('Monday')
@@ -38,10 +30,16 @@ export default function AdminTimetablePage() {
       room: newRoom,
       status: 'Active Slot'
     }
-    setTimetable([...timetable, slot])
+    addSlot(slot)
     setShowAddModal(false)
     setToast(`Master campus slot allocated: ${newCode} (${newDay} @ ${newTime}) assigned to ${newInstructor}.`)
     setTimeout(() => setToast(null), 5000)
+  }
+
+  const handleDeleteSlot = (id: string, code: string) => {
+    deleteSlot(id)
+    setToast(`Timetable slot for ${code} removed from master campus schedule.`)
+    setTimeout(() => setToast(null), 4000)
   }
 
   return (
@@ -112,6 +110,7 @@ export default function AdminTimetablePage() {
                 <th className="p-4">Assigned Instructor</th>
                 <th className="p-4">Hall / Laboratory</th>
                 <th className="p-4">Status</th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#4A3F35]/60 font-[var(--font-crimson)] text-sm">
@@ -133,6 +132,16 @@ export default function AdminTimetablePage() {
                     <span className="px-2.5 py-1 rounded text-[10px] font-mono font-semibold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
                       {slot.status}
                     </span>
+                  </td>
+                  <td className="p-4 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSlot(slot.id, slot.subjectCode)}
+                      title="Remove Slot"
+                      className="p-1.5 rounded-lg border border-[#4A3F35] text-[#9C8B7A] hover:text-rose-400 hover:border-rose-500/40 hover:bg-[#1C1714] transition cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </td>
                 </tr>
               ))}

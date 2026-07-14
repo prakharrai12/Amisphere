@@ -1,4 +1,4 @@
-export type AppRole = 'admin' | 'student' | 'faculty' | 'hod'
+export type AppRole = 'admin' | 'student' | 'faculty' | 'hod' | 'staff'
 
 export interface AppUser {
   id: string
@@ -47,6 +47,15 @@ export const demoUsers: AppUser[] = [
     department: 'Computer Science',
     avatar: 'GM',
   },
+  {
+    id: 'staff-1',
+    name: 'Technical & Logistics Staff',
+    email: 'staff@amisphere.edu',
+    password: 'staff123',
+    role: 'staff',
+    department: 'Campus Operations',
+    avatar: 'LS',
+  },
 ]
 
 export const roleMeta: Record<AppRole, { label: string; home: string }> = {
@@ -54,6 +63,7 @@ export const roleMeta: Record<AppRole, { label: string; home: string }> = {
   student: { label: 'Student', home: '/student' },
   faculty: { label: 'Faculty', home: '/faculty' },
   hod: { label: 'Head of Department', home: '/hod' },
+  staff: { label: 'Staff Operations', home: '/staff' },
 }
 
 export function getStoredUser(): AppUser | null {

@@ -1,40 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useAnnouncementsStore } from '@/lib/hybrid-store'
 import { Bell, Plus, CheckCircle2, ShieldCheck, Megaphone, Trash2 } from 'lucide-react'
 
-const initialSenateAnnouncements = [
-  {
-    id: 'ann-1',
-    title: 'Statutory End-Semester Examination Schedule Proclamation (Odd Semester III)',
-    category: 'Examination Council',
-    date: 'July 09, 2026',
-    author: 'Krashnkant Gupta Sir (Admin Secretariat)',
-    priority: 'Urgent Directive',
-    content: 'In accordance with Ordinance XII of the Amisphere University Senate, all scholars enrolled in Volume III Computer Science & Engineering must verify their attendance eligibility (>= 75%) before July 20, 2026.'
-  },
-  {
-    id: 'ann-2',
-    title: 'Disbursement of Research & Laboratory Upgradation Grants',
-    category: 'Finance & Accounts',
-    date: 'July 05, 2026',
-    author: 'Krashnkant Gupta Sir (Admin Secretariat)',
-    priority: 'General Notice',
-    content: 'The Senate has sanctioned an additional grant of ₹12,00,000 for the modernization of the High-Performance Computing Lab and AI Research Cluster under the direction of Prof. Gaurav Mishra Sir.'
-  },
-  {
-    id: 'ann-3',
-    title: 'Inter-University Classical Debate & Hackathon Symposium 2026',
-    category: 'Student Welfare',
-    date: 'July 01, 2026',
-    author: 'Dean Student Welfare Office',
-    priority: 'Campus Event',
-    content: 'Registration for the Annual Amisphere Classical Hackathon is now open. Winning cohorts will receive statutory commendation letters and research stipends.'
-  }
-]
-
 export default function AdminAnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState(initialSenateAnnouncements)
+  const { announcements, addAnnouncement, deleteAnnouncement } = useAnnouncementsStore()
   const [showAddModal, setShowAddModal] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newCategory, setNewCategory] = useState('Examination Council')
@@ -44,16 +15,7 @@ export default function AdminAnnouncementsPage() {
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const ann = {
-      id: `ann-${Date.now()}`,
-      title: newTitle,
-      category: newCategory,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }),
-      author: 'Krashnkant Gupta Sir (Admin Secretariat)',
-      priority: newPriority,
-      content: newContent
-    }
-    setAnnouncements([ann, ...announcements])
+    addAnnouncement(newTitle, newCategory, newContent, newPriority, 'Krashnkant Gupta Sir (Admin Secretariat)')
     setShowAddModal(false)
     setToast(`Senate directive published to all student and faculty portals: "${newTitle}".`)
     setNewTitle('')
@@ -62,7 +24,7 @@ export default function AdminAnnouncementsPage() {
   }
 
   const handleDelete = (id: string) => {
-    setAnnouncements(announcements.filter(a => a.id !== id))
+    deleteAnnouncement(id)
     setToast('Directive archived from active campus bulletin board.')
     setTimeout(() => setToast(null), 4000)
   }
