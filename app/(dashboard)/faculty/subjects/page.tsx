@@ -159,6 +159,40 @@ export default function FacultySubjectsPage() {
           <div className="p-6 rounded-2xl border border-[#C9A962]/40 bg-[#251E19] shadow-md space-y-4">
             <h4 className="text-base font-normal font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
               <Award className="h-4 w-4 text-[#C9A962]" />
+              <span>Unit Lesson Plan Tracker ({currentSubject.code})</span>
+            </h4>
+            <p className="text-xs text-[#9C8B7A] font-[var(--font-crimson)] leading-relaxed">
+              Toggle statutory syllabus units covered to auto-update Senate completion registry.
+            </p>
+            <div className="space-y-2 font-[var(--font-crimson)] text-sm">
+              {[
+                { id: 'u1', title: 'Unit I: Core Fundamentals & Mathematical Foundations', defaultDone: true },
+                { id: 'u2', title: 'Unit II: Advanced Architectural Models & Paging', defaultDone: true },
+                { id: 'u3', title: 'Unit III: Asynchronous Concurrency & Synchronization', defaultDone: true },
+                { id: 'u4', title: 'Unit IV: Distributed Systems & Consensus Protocols', defaultDone: false },
+                { id: 'u5', title: 'Unit V: Security, Cryptography & Case Studies', defaultDone: false },
+              ].map((unit, idx) => (
+                <label key={unit.id} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-[#1C1714] border border-[#4A3F35] cursor-pointer hover:border-[#C9A962]/60 transition">
+                  <input
+                    type="checkbox"
+                    defaultChecked={unit.defaultDone}
+                    onChange={(e) => {
+                      const newProg = e.target.checked ? Math.min(100, syllabusProgress + 20) : Math.max(0, syllabusProgress - 20)
+                      setSyllabusProgress(newProg)
+                      setToast(`Syllabus Unit completion modified: ${newProg}% recorded in governance log.`)
+                      setTimeout(() => setToast(null), 3000)
+                    }}
+                    className="mt-1 accent-[#C9A962] cursor-pointer"
+                  />
+                  <span className="text-xs text-[#E8DFD4] font-medium">{unit.title}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-6 rounded-2xl border border-[#C9A962]/40 bg-[#251E19] shadow-md space-y-4">
+            <h4 className="text-base font-normal font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+              <Award className="h-4 w-4 text-[#C9A962]" />
               <span>Senate Course Mandates</span>
             </h4>
             <p className="text-xs text-[#9C8B7A] font-[var(--font-crimson)] leading-relaxed">
