@@ -43,10 +43,19 @@ export default function FacultyAttendancePage() {
     setTimeout(() => setToast(null), 5000)
   }
 
+  const handleMarkAll = (status: 'Present' | 'Absent') => {
+    filteredRoster.forEach(s => updateStudentStatus(s.id, status))
+    setToast(`Batch update: Marked ${filteredRoster.length} scholars as ${status}.`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
   const filteredRoster = roster.filter(s =>
     s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (s.rollNo || s.rollNumber || '').toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const presentCount = filteredRoster.filter(s => s.status === 'Present').length
+  const absentCount = filteredRoster.filter(s => s.status === 'Absent').length
 
   const pendingPetitions = requests.filter(r => r.status === 'Pending Review')
   const adjudicatedPetitions = requests.filter(r => r.status !== 'Pending Review')
@@ -144,6 +153,20 @@ export default function FacultyAttendancePage() {
               </div>
 
               <button
+                onClick={() => handleMarkAll('Present')}
+                className="px-3.5 py-2 rounded-md border border-emerald-500/50 text-emerald-400 bg-[#1C1714] hover:bg-emerald-500/10 text-xs shadow-md flex items-center gap-1.5 cursor-pointer shrink-0 font-semibold transition"
+              >
+                <span>Mark All Present</span>
+              </button>
+
+              <button
+                onClick={() => handleMarkAll('Absent')}
+                className="px-3.5 py-2 rounded-md border border-rose-500/50 text-rose-400 bg-[#1C1714] hover:bg-rose-500/10 text-xs shadow-md flex items-center gap-1.5 cursor-pointer shrink-0 font-semibold transition"
+              >
+                <span>Mark All Absent</span>
+              </button>
+
+              <button
                 onClick={handleExportCSV}
                 className="px-4 py-2 rounded-md border border-[#C9A962] text-[#C9A962] bg-[#1C1714] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer shrink-0 font-semibold transition"
               >
@@ -158,6 +181,15 @@ export default function FacultyAttendancePage() {
                 <Save className="h-4 w-4 text-[#1C1714]" />
                 <span>Seal Daily Register</span>
               </button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[#1C1714] border border-[#4A3F35] text-xs font-mono">
+            <span className="text-[#9C8B7A] uppercase font-[var(--font-cinzel)] tracking-wider">Session Summary</span>
+            <div className="flex items-center gap-6">
+              <span className="text-emerald-400 font-bold">Present: {presentCount}</span>
+              <span className="text-rose-400 font-bold">Absent: {absentCount}</span>
+              <span className="text-[#C9A962]">Total Scholars: {filteredRoster.length}</span>
             </div>
           </div>
 
