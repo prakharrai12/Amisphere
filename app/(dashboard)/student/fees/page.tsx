@@ -217,6 +217,7 @@ export default function StudentFeesPage() {
               >
                 <Printer className="h-4 w-4 text-[#1C1714]" />
                 <span>Print Ledger Document</span>
+              </button>
             </div>
           </div>
         </div>
