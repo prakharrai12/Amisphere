@@ -6,6 +6,13 @@ import { demoFeeLedger } from '@/lib/demo-data'
 
 export default function StudentFeesPage() {
   const [showReceipt, setShowReceipt] = useState(false)
+  const [showTaxDialog, setShowTaxDialog] = useState(false)
+  const [showSimulator, setShowSimulator] = useState(false)
+  const [scholarshipPercent, setScholarshipPercent] = useState('25')
+
+  const baseTuition = 125000
+  const discountAmount = (baseTuition * parseFloat(scholarshipPercent || '0')) / 100
+  const netEstimatedTuition = baseTuition - discountAmount
 
   return (
     <div className={`p-8 min-h-screen ${showReceipt ? 'print:p-0 print:m-0' : 'space-y-8'}`}>
@@ -24,13 +31,27 @@ export default function StudentFeesPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => setShowReceipt(true)}
-            className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase tracking-wider"
-          >
-            <Printer className="h-4 w-4 text-[#1C1714]" />
-            <span>View & Print Official Receipt</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setShowSimulator(true)}
+              className="px-4 py-2.5 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+            >
+              <span>Scholarship Calculator</span>
+            </button>
+            <button
+              onClick={() => setShowTaxDialog(true)}
+              className="px-4 py-2.5 rounded-md border border-emerald-500/60 bg-[#1C1714] text-emerald-400 hover:bg-emerald-500/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+            >
+              <span>Tax Exemption (Sec 80G)</span>
+            </button>
+            <button
+              onClick={() => setShowReceipt(true)}
+              className="px-5 py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase tracking-wider"
+            >
+              <Printer className="h-4 w-4 text-[#1C1714]" />
+              <span>Print Official Receipt</span>
+            </button>
+          </div>
         </div>
 
         {/* Main Status & Wax Seal Banner */}
@@ -196,8 +217,85 @@ export default function StudentFeesPage() {
               >
                 <Printer className="h-4 w-4 text-[#1C1714]" />
                 <span>Print Ledger Document</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSimulator && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 print:hidden animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4]">
+                Scholarship Discount Simulator
+              </h3>
+              <button onClick={() => setShowSimulator(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg">✕</button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">Select Scholarship Tier / Waiver</label>
+                <select
+                  value={scholarshipPercent}
+                  onChange={(e) => setScholarshipPercent(e.target.value)}
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs font-mono outline-none focus:border-[#C9A962]"
+                >
+                  <option value="10">Ordinance V - Dean's Merit Waiver (10%)</option>
+                  <option value="25">Ordinance XII - Senate Academic Scholarship (25%)</option>
+                  <option value="50">Chancellors Gold Medal Fellowship (50%)</option>
+                  <option value="100">Full Endowment Grant (100% Waiver)</option>
+                </select>
+              </div>
+              <div className="p-4 rounded-xl bg-[#1C1714] border border-[#C9A962]/40 space-y-2">
+                <div className="flex justify-between text-xs text-[#9C8B7A]">
+                  <span>Base Tuition Fee:</span>
+                  <span className="font-mono">₹1,25,000</span>
+                </div>
+                <div className="flex justify-between text-xs text-emerald-400">
+                  <span>Scholarship Discount ({scholarshipPercent}%):</span>
+                  <span className="font-mono">-₹{discountAmount.toLocaleString()}</span>
+                </div>
+                <div className="border-t border-[#4A3F35] pt-2 flex justify-between font-bold text-base text-[#C9A962]">
+                  <span>Net Assessed Tuition:</span>
+                  <span className="font-mono">₹{netEstimatedTuition.toLocaleString()}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSimulator(false)}
+                className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-semibold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md mt-2"
+              >
+                Close Simulator
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showTaxDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 print:hidden animate-fade-in">
+          <div className="rounded-2xl border-2 border-emerald-500/60 bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-emerald-400" /> Income Tax Exemption Statement (Sec 80G)
+              </h3>
+              <button onClick={() => setShowTaxDialog(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg">✕</button>
+            </div>
+            <div className="p-6 rounded-xl bg-[#1C1714] border border-emerald-500/30 font-[var(--font-crimson)] space-y-3 text-sm text-[#E8DFD4]">
+              <p className="font-serif text-base text-[#C9A962]">Official Tax Attestation Certificate</p>
+              <p>
+                This certifies that total tuition dispersal of <strong className="font-mono text-emerald-400">₹1,47,500</strong> made by/for scholar <strong className="text-[#C9A962]">PRAKHAR RAI</strong> (Roll No. A2040522104) to Amisphere University is eligible for tax deduction benefits under Section 80G / 80E of the Income Tax Act, 1961.
+              </p>
+              <p className="text-xs text-[#9C8B7A]">
+                University PAN: AAACA1234F • Registration Ref: 80G(5)(vi)/2026-AMI
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowTaxDialog(false)}
+              className="w-full py-2.5 rounded-md border border-emerald-500/60 bg-emerald-500/20 text-emerald-400 font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider"
+            >
+              Acknowledge & Close
+            </button>
           </div>
         </div>
       )}
