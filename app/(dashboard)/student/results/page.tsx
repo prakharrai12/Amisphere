@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { GraduationCap, Award, ShieldCheck, Printer, Download, CheckCircle2 } from 'lucide-react'
+import React, { useState } from 'react'
+import { GraduationCap, Award, ShieldCheck, Printer, Download, CheckCircle2, Calculator, X, FileCheck } from 'lucide-react'
 
 const pastSemesters = [
   {
@@ -41,6 +41,15 @@ const pastSemesters = [
 ]
 
 export default function StudentResultsPage() {
+  const [showSimulator, setShowSimulator] = useState(false)
+  const [showCertificate, setShowCertificate] = useState(false)
+  const [targetSgpa, setTargetSgpa] = useState('9.50')
+  const [targetCredits, setTargetCredits] = useState('24')
+  
+  const currentTotalCredits = 48
+  const currentCGPA = 9.38
+  const simulatedCGPA = ((currentCGPA * currentTotalCredits) + (parseFloat(targetSgpa || '0') * parseFloat(targetCredits || '0'))) / (currentTotalCredits + parseFloat(targetCredits || '0'))
+
   return (
     <div className="p-8 space-y-8 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
@@ -57,13 +66,27 @@ export default function StudentResultsPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => window.print()}
-          className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0"
-        >
-          <Printer className="h-4 w-4 text-[#1C1714]" />
-          <span>Print Official Transcript</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowSimulator(true)}
+            className="px-4 py-2.5 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase flex items-center gap-2 transition cursor-pointer"
+          >
+            <Calculator className="h-4 w-4" /> Simulate Target SGPA
+          </button>
+          <button
+            onClick={() => setShowCertificate(true)}
+            className="px-4 py-2.5 rounded-md border border-emerald-500/60 bg-[#1C1714] text-emerald-400 hover:bg-emerald-500/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase flex items-center gap-2 transition cursor-pointer"
+          >
+            <FileCheck className="h-4 w-4" /> Digital Verification
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="px-5 py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-semibold shadow-lg flex items-center gap-2 cursor-pointer shrink-0 font-[var(--font-cinzel)] tracking-wider uppercase"
+          >
+            <Printer className="h-4 w-4 text-[#1C1714]" />
+            <span>Print Transcript</span>
+          </button>
+        </div>
       </div>
 
       {/* CGPA & Academic Standing Banner */}
@@ -144,6 +167,93 @@ export default function StudentResultsPage() {
           </div>
         ))}
       </div>
+
+      {/* Simulator Modal */}
+      {showSimulator && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Calculator className="h-5 w-5 text-[#C9A962]" /> Target CGPA Calculator
+              </h3>
+              <button onClick={() => setShowSimulator(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] transition">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">Expected Semester III SGPA</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="10"
+                  value={targetSgpa}
+                  onChange={(e) => setTargetSgpa(e.target.value)}
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs font-mono outline-none focus:border-[#C9A962]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">Target Semester Credits</label>
+                <input
+                  type="number"
+                  value={targetCredits}
+                  onChange={(e) => setTargetCredits(e.target.value)}
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs font-mono outline-none focus:border-[#C9A962]"
+                />
+              </div>
+              <div className="p-4 rounded-xl bg-[#1C1714] border border-[#C9A962]/40 space-y-1">
+                <span className="text-[11px] uppercase tracking-wider text-[#9C8B7A] font-[var(--font-cinzel)] block">Projected Cumulative GPA</span>
+                <span className="text-3xl font-bold font-mono text-[#C9A962]">{simulatedCGPA.toFixed(2)}</span>
+                <span className="text-xs text-[#E8DFD4] block pt-1 font-serif font-normal">Based on 48 earned + {targetCredits || 0} projected credits.</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSimulator(false)}
+                className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-semibold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md mt-2"
+              >
+                Close Projection
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Certificate Verification Modal */}
+      {showCertificate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-emerald-500/60 bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-emerald-400" /> Digital Transcript Attestation
+              </h3>
+              <button onClick={() => setShowCertificate(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] transition">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-6 rounded-xl bg-[#1C1714] border border-emerald-500/30 font-[var(--font-crimson)] space-y-3 text-sm text-[#E8DFD4]">
+              <p className="font-serif text-base text-[#C9A962]">To Whomsoever It May Concern,</p>
+              <p>
+                This is to certify and attest under Ordinance XII of the Amisphere University Senate that <strong className="text-[#C9A962]">PRAKHAR RAI</strong> (Roll No. A2040522104) is a bona fide scholar of B.Tech Computer Science & Engineering.
+              </p>
+              <p>
+                The cumulative grade records up to Volume II (Spring 2026) show a Cumulative Grade Point Average (CGPA) of <strong className="font-mono text-emerald-400">9.38 / 10.00</strong> with First Class Distinction.
+              </p>
+              <div className="pt-4 flex items-center justify-between text-xs font-mono border-t border-[#4A3F35] text-[#9C8B7A]">
+                <span>Issued: {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</span>
+                <span className="text-emerald-400 font-bold">Ref: AMI-SEN-2026-938</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowCertificate(false)}
+              className="w-full py-2.5 rounded-md border border-emerald-500/60 bg-emerald-500/20 text-emerald-400 font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider"
+            >
+              Verify & Dismiss
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
