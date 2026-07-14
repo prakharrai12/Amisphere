@@ -6,9 +6,27 @@ import { demoFacultySalary } from '@/lib/demo-data'
 
 export default function FacultySalaryPage() {
   const [showSlipModal, setShowSlipModal] = useState(false)
+  const [showForm16Modal, setShowForm16Modal] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
+
+  const handleRequestForm16 = () => {
+    setToast(`Annual Statutory Income Tax Certificate (Form 16 - Assessment Year 2026-27) dispatched to your official faculty inbox.`)
+    setShowForm16Modal(false)
+    setTimeout(() => setToast(null), 5000)
+  }
 
   return (
     <div className={`p-8 min-h-screen ${showSlipModal ? 'print:p-0 print:m-0' : 'space-y-8'}`}>
+      {toast && (
+        <div className="p-4 rounded-xl border border-[#C9A962] bg-[#251E19] text-[#C9A962] flex items-center justify-between shadow-xl animate-fade-in print:hidden">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 shrink-0" />
+            <span className="font-semibold text-xs">{toast}</span>
+          </div>
+          <button onClick={() => setToast(null)} className="text-[#9C8B7A] hover:text-[#E8DFD4] cursor-pointer">✕</button>
+        </div>
+      )}
+
       <div className={showSlipModal ? 'print:hidden space-y-8' : 'space-y-8'}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
           <div>
@@ -24,13 +42,22 @@ export default function FacultySalaryPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => setShowSlipModal(true)}
-            className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase tracking-wider"
-          >
-            <Printer className="h-4 w-4 text-[#1C1714]" />
-            <span>View & Print Official Pay Slip</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowForm16Modal(true)}
+              className="px-4 py-3 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition"
+            >
+              <FileText className="h-4 w-4" />
+              <span>Form 16 Tax Certificate</span>
+            </button>
+            <button
+              onClick={() => setShowSlipModal(true)}
+              className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase tracking-wider"
+            >
+              <Printer className="h-4 w-4 text-[#1C1714]" />
+              <span>View & Print Official Pay Slip</span>
+            </button>
+          </div>
         </div>
 
         {/* Main Net Pay Banner */}
@@ -182,6 +209,41 @@ export default function FacultySalaryPage() {
               >
                 <Printer className="h-4 w-4 text-[#1C1714]" />
                 <span>Print Official Document</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showForm16Modal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 print:hidden animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#C9A962]" /> Annual Form 16 Tax Statement
+              </h3>
+              <button onClick={() => setShowForm16Modal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35]">
+                <span className="text-xs text-[#9C8B7A] uppercase font-[var(--font-cinzel)] block">Assessment Year & TAN</span>
+                <span className="text-base font-semibold text-[#E8DFD4]">AY 2026-2027 • TAN: DELA18290G</span>
+              </div>
+              <p className="text-xs text-[#9C8B7A] leading-relaxed">
+                Form 16 includes Part A (Tax Deducted at Source summaries deposited with the Income Tax Department) and Part B (Itemized salary structure and deduction exemptions under Sections 80C, 80D, and 24).
+              </p>
+              <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35] space-y-1 font-mono text-xs text-[#C9A962]">
+                <div className="flex justify-between"><span>Gross Annual Salary:</span><span>₹24,60,000</span></div>
+                <div className="flex justify-between"><span>Total Deductions Under Chapter VI-A:</span><span>₹2,50,000</span></div>
+                <div className="flex justify-between font-bold border-t border-[#4A3F35] pt-1 mt-1 text-[#E8DFD4]"><span>Net Taxable Income:</span><span>₹22,10,000</span></div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-3 border-t border-[#4A3F35]">
+              <button onClick={() => setShowForm16Modal(false)} className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] hover:bg-[#1C1714] text-xs uppercase font-[var(--font-cinzel)] cursor-pointer">
+                Close
+              </button>
+              <button onClick={handleRequestForm16} className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] shadow-md cursor-pointer">
+                Download Form 16 PDF
               </button>
             </div>
           </div>
