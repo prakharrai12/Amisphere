@@ -86,6 +86,18 @@ export default function FacultyAssignmentsPage() {
     setStudentSubmissions(studentSubmissions.map(s => s.id === id ? { ...s, feedback: newFeedback } : s))
   }
 
+  const handleBatchGrade = (score: number) => {
+    setStudentSubmissions(studentSubmissions.map(s => ({ ...s, score })))
+    setToast(`Applied standard grade score of ${score} / 100 to all ${studentSubmissions.length} submissions.`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
+  const handleDeleteAssignment = (id: string, title: string) => {
+    setAssignments(assignments.filter(a => a.id !== id))
+    setToast(`Assignment "${title}" archived and removed from active teaching roster.`)
+    setTimeout(() => setToast(null), 4000)
+  }
+
   const handleSaveEvaluation = () => {
     setToast(`Digital grades & evaluations for "${gradingAsg?.title}" successfully finalized and dispatched to student academic records.`)
     setGradingAsg(null)
@@ -161,9 +173,12 @@ export default function FacultyAssignmentsPage() {
                 ></div>
               </div>
               <div className="flex items-center justify-between pt-1">
-                <span className="text-[10px] uppercase font-[var(--font-cinzel)] text-[#C9A962] font-semibold">
-                  {asg.status}
-                </span>
+                <button
+                  onClick={() => handleDeleteAssignment(asg.id, asg.title)}
+                  className="text-xs text-[#9C8B7A] hover:text-rose-400 font-mono transition cursor-pointer"
+                >
+                  [Archive]
+                </button>
                 <button
                   onClick={() => setGradingAsg(asg)}
                   className="text-xs font-semibold text-sky-400 hover:text-sky-300 hover:underline cursor-pointer flex items-center gap-1"
@@ -359,9 +374,17 @@ export default function FacultyAssignmentsPage() {
                     </div>
 
                     <div className="pt-3 border-t border-[#4A3F35] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-                      <span className="text-[11px] text-[#9C8B7A] italic">
-                        Digital grading recorded under Prof. D.P. Singh Sir.
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleBatchGrade(90)}
+                          className="px-3.5 py-1.5 rounded-lg border border-[#C9A962]/60 bg-[#251E19] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold cursor-pointer shrink-0 transition"
+                        >
+                          Apply Default Score (90)
+                        </button>
+                        <span className="text-[11px] text-[#9C8B7A] italic hidden md:inline">
+                          Prof. D.P. Singh Sir
+                        </span>
+                      </div>
                       <button
                         onClick={handleSaveEvaluation}
                         className="px-5 py-2 rounded-lg brass-gradient text-[#1C1714] text-xs font-bold shadow-lg font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer shrink-0"
