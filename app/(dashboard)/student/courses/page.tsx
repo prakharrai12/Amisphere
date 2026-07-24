@@ -6,9 +6,34 @@ import { demoSubjects } from '@/lib/demo-data'
 
 export default function StudentCoursesPage() {
   const [selectedSubject, setSelectedSubject] = useState(demoSubjects[0])
+  const [showSyllabusModal, setShowSyllabusModal] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
+  const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({
+    'Unit 1': true,
+    'Unit 2': true,
+  })
+
+  const triggerToast = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(null), 4000)
+  }
+
+  const toggleUnit = (unitKey: string) => {
+    setCompletedUnits(prev => ({ ...prev, [unitKey]: !prev[unitKey] }))
+  }
 
   return (
     <div className="p-8 space-y-8 min-h-screen">
+      {toast && (
+        <div className="p-4 rounded-xl border border-[#C9A962] bg-[#251E19] text-[#C9A962] flex items-center justify-between shadow-xl animate-fade-in">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-5 w-5" />
+            <span className="font-semibold text-xs">{toast}</span>
+          </div>
+          <button onClick={() => setToast(null)} className="text-[#9C8B7A] hover:text-[#E8DFD4] cursor-pointer">✕</button>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A962] font-[var(--font-cinzel)]">
@@ -22,6 +47,13 @@ export default function StudentCoursesPage() {
             Monsoon Semester III (Volume III) • Total Registered Credit Load: 14 Credits
           </p>
         </div>
+
+        <button
+          onClick={() => setShowSyllabusModal(true)}
+          className="px-4 py-2.5 rounded-lg brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] tracking-wider uppercase shadow-md cursor-pointer shrink-0"
+        >
+          <span>📜 Unit Syllabus Checklist</span>
+        </button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
@@ -102,7 +134,7 @@ export default function StudentCoursesPage() {
               </h3>
               <div className="space-y-2">
                 <button
-                  onClick={() => alert(`Downloading Syllabus PDF for ${selectedSubject.code}...`)}
+                  onClick={() => triggerToast(`Downloading Official Syllabus PDF for ${selectedSubject.code}...`)}
                   className="w-full flex items-center justify-between p-3 rounded-xl bg-[#1C1714] border border-[#4A3F35] hover:border-[#C9A962] transition text-left cursor-pointer group"
                 >
                   <div className="flex items-center gap-3">
@@ -116,7 +148,7 @@ export default function StudentCoursesPage() {
                 </button>
 
                 <button
-                  onClick={() => alert(`Accessing Lecture Notes Repository for ${selectedSubject.name}...`)}
+                  onClick={() => triggerToast(`Accessing Lecture Notes Repository for ${selectedSubject.name}...`)}
                   className="w-full flex items-center justify-between p-3 rounded-xl bg-[#1C1714] border border-[#4A3F35] hover:border-[#C9A962] transition text-left cursor-pointer group"
                 >
                   <div className="flex items-center gap-3">
@@ -133,6 +165,57 @@ export default function StudentCoursesPage() {
           </div>
         </div>
       </div>
+
+      {showSyllabusModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-[#C9A962]" /> {selectedSubject.code} Syllabus Units Breakdown
+              </h3>
+              <button onClick={() => setShowSyllabusModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm max-h-[50vh] overflow-y-auto pr-1">
+              {[
+                { unit: 'Unit 1', title: 'Asymptotic Analysis & Recurrences', detail: 'Big-O, Master Theorem, Divide-and-Conquer algorithms' },
+                { unit: 'Unit 2', title: 'Advanced Graph Algorithms', detail: 'Dijkstra, Bellman-Ford, Kruskal, Prim, Network Flow' },
+                { unit: 'Unit 3', title: 'Dynamic Programming & Greedy Design', detail: 'Knapsack, Matrix Chain, Longest Common Subsequence' },
+                { unit: 'Unit 4', title: 'NP-Completeness & Approximation', detail: 'P vs NP, SAT reduction, Travelling Salesperson approximations' },
+              ].map(u => {
+                const isChecked = !!completedUnits[u.unit]
+                return (
+                  <div
+                    key={u.unit}
+                    onClick={() => toggleUnit(u.unit)}
+                    className="p-3.5 rounded-xl border border-[#4A3F35] bg-[#1C1714] flex items-start gap-3 cursor-pointer hover:border-[#C9A962]/60 transition"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => {}}
+                      className="mt-1 h-4 w-4 accent-[#C9A962]"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs text-[#C9A962] font-semibold">{u.unit}:</span>
+                        <span className="font-medium text-[#E8DFD4] text-sm">{u.title}</span>
+                      </div>
+                      <p className="text-xs text-[#9C8B7A] mt-0.5">{u.detail}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowSyllabusModal(false)}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
+            >
+              Close Syllabus Breakdown
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
