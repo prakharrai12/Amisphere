@@ -6,7 +6,9 @@ import { demoFacultyDirectory } from '@/lib/demo-data'
 
 export default function StudentFacultyPage() {
   const [selectedFaculty, setSelectedFaculty] = useState<typeof demoFacultyDirectory[0] | null>(null)
+  const [bookingFaculty, setBookingFaculty] = useState<typeof demoFacultyDirectory[0] | null>(null)
   const [messageText, setMessageText] = useState('')
+  const [slotDate, setSlotDate] = useState(new Date().toISOString().split('T')[0])
   const [sentSuccess, setSentSuccess] = useState<string | null>(null)
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -15,6 +17,14 @@ export default function StudentFacultyPage() {
     setSentSuccess(`Message dispatched to ${selectedFaculty.name} (${selectedFaculty.email}). A response will be directed to your student portal inbox within 24 business hours.`)
     setSelectedFaculty(null)
     setMessageText('')
+    setTimeout(() => setSentSuccess(null), 6000)
+  }
+
+  const handleBookSlot = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!bookingFaculty) return
+    setSentSuccess(`Office hour consultation request confirmed with ${bookingFaculty.name} for ${slotDate}. Calendar entry generated.`)
+    setBookingFaculty(null)
     setTimeout(() => setSentSuccess(null), 6000)
   }
 
@@ -79,15 +89,23 @@ export default function StudentFacultyPage() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#4A3F35]/70 flex items-center justify-between">
+            <div className="pt-4 border-t border-[#4A3F35]/70 flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-mono text-[#9C8B7A]">{fac.phone}</span>
-              <button
-                onClick={() => setSelectedFaculty(fac)}
-                className="px-4 py-2 rounded-md brass-gradient text-xs shadow-md flex items-center gap-1.5 cursor-pointer"
-              >
-                <MessageSquare className="h-3.5 w-3.5 text-[#1C1714]" />
-                <span>Contact Instructor</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setBookingFaculty(fac)}
+                  className="px-3 py-1.5 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase cursor-pointer"
+                >
+                  📅 Book Slot
+                </button>
+                <button
+                  onClick={() => setSelectedFaculty(fac)}
+                  className="px-4 py-2 rounded-md brass-gradient text-xs shadow-md flex items-center gap-1.5 cursor-pointer font-[var(--font-cinzel)] tracking-wider uppercase font-semibold"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 text-[#1C1714]" />
+                  <span>Memo</span>
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -157,6 +175,75 @@ export default function StudentFacultyPage() {
                 >
                   <Send className="h-4 w-4 text-[#1C1714]" />
                   <span>Transmit Official Memo</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Book Office Hours Modal */}
+      {bookingFaculty && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/80 backdrop-blur-sm p-4">
+          <div className="rounded-2xl border border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35] mb-4">
+              <h3 className="text-xl font-normal font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Clock className="h-5 w-5 text-[#C9A962]" />
+                <span>Office Hour Reservation</span>
+              </h3>
+              <button
+                onClick={() => setBookingFaculty(null)}
+                className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleBookSlot} className="space-y-4 text-sm font-[var(--font-crimson)]">
+              <div className="p-3 rounded-xl bg-[#1C1714] border border-[#4A3F35] text-xs space-y-1">
+                <p className="font-semibold text-[#E8DFD4] text-sm">{bookingFaculty.name}</p>
+                <p className="text-[#C9A962]">Official Office Hours: {bookingFaculty.hours}</p>
+                <p className="text-[#9C8B7A] text-[10px]">Location: {bookingFaculty.office}</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
+                  Requested Slot Date
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={slotDate}
+                  onChange={(e) => setSlotDate(e.target.value)}
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2 text-xs outline-none focus:border-[#C9A962]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
+                  Consultation Purpose
+                </label>
+                <select className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2 text-xs outline-none focus:border-[#C9A962]">
+                  <option>Term Project Guidance & Review</option>
+                  <option>Attendance Regularization Petition Clarification</option>
+                  <option>Midterm Exam Paper Re-evaluation</option>
+                  <option>Research Paper / Thesis Advisory</option>
+                </select>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-[#4A3F35]">
+                <button
+                  type="button"
+                  onClick={() => setBookingFaculty(null)}
+                  className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] hover:bg-[#1C1714] text-xs uppercase font-[var(--font-cinzel)] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] uppercase tracking-wider shadow-md cursor-pointer"
+                >
+                  Confirm Reservation
                 </button>
               </div>
             </form>
