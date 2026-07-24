@@ -15,8 +15,13 @@ export default function FacultyAttendancePage() {
   const [remarksText, setRemarksText] = useState('')
   const [toast, setToast] = useState<string | null>(null)
 
+  const [showSessionRemarksModal, setShowSessionRemarksModal] = useState(false)
+  const [sessionNotes, setSessionNotes] = useState('')
+
   const handleSaveRegister = () => {
-    setToast(`Daily attendance register for ${selectedSubject} (Date: ${new Date().toISOString().split('T')[0]}) sealed and synchronized with the University Database.`)
+    setToast(`Daily attendance register for ${selectedSubject} (Date: ${new Date().toISOString().split('T')[0]}) sealed and synchronized with the University Database. ${sessionNotes ? 'Session remarks recorded.' : ''}`)
+    setShowSessionRemarksModal(false)
+    setSessionNotes('')
     setTimeout(() => setToast(null), 5000)
   }
 
@@ -172,6 +177,13 @@ export default function FacultyAttendancePage() {
               >
                 <Download className="h-4 w-4" />
                 <span>Export CSV</span>
+              </button>
+
+              <button
+                onClick={() => setShowSessionRemarksModal(true)}
+                className="px-4 py-2 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer shrink-0 font-semibold font-[var(--font-cinzel)] uppercase"
+              >
+                📝 Session Notes
               </button>
 
               <button
@@ -387,6 +399,58 @@ export default function FacultyAttendancePage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showSessionRemarksModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <CheckSquare className="h-5 w-5 text-[#C9A962]" /> Session Topic & Remarks Log
+              </h3>
+              <button onClick={() => setShowSessionRemarksModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <p className="text-xs text-[#9C8B7A]">
+                Record syllabus unit topics covered today and log any disciplinary or attendance anomalies for administrative archiving.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Session Topic Covered</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Unit 3: Graph Traversal Algorithms (BFS/DFS)"
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Faculty Remarks & Anomaly Log</label>
+                <textarea
+                  rows={4}
+                  value={sessionNotes}
+                  onChange={(e) => setSessionNotes(e.target.value)}
+                  placeholder="Write session notes, lab equipment status, or scholar participation comments..."
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-3 text-xs outline-none focus:border-[#C9A962]"
+                ></textarea>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#4A3F35]">
+              <button
+                type="button"
+                onClick={() => setShowSessionRemarksModal(false)}
+                className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] text-xs uppercase font-[var(--font-cinzel)]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveRegister}
+                className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] uppercase tracking-wider shadow-md cursor-pointer"
+              >
+                Save Notes & Seal Register
+              </button>
+            </div>
           </div>
         </div>
       )}
