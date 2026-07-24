@@ -203,6 +203,23 @@ export default function HodAnnouncementsPage() {
                 ></textarea>
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
+                  Multi-Channel Dispatch Network
+                </label>
+                <div className="flex flex-wrap gap-4 pt-1">
+                  <label className="flex items-center gap-2 text-xs text-[#E8DFD4] cursor-pointer font-[var(--font-crimson)]">
+                    <input type="checkbox" defaultChecked className="accent-[#C9A962]" /> Student Portal Feed
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-[#E8DFD4] cursor-pointer font-[var(--font-crimson)]">
+                    <input type="checkbox" defaultChecked className="accent-[#C9A962]" /> Department Faculty Email
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-[#E8DFD4] cursor-pointer font-[var(--font-crimson)]">
+                    <input type="checkbox" defaultChecked className="accent-[#C9A962]" /> Urgent SMS Dispatch
+                  </label>
+                </div>
+              </div>
+
               <div className="pt-4 flex justify-end gap-3 border-t border-[#4A3F35]">
                 <button
                   type="button"
