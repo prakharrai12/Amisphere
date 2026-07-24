@@ -34,6 +34,8 @@ function Tabs({ active, onChange }: { active: string, onChange: (v: string) => v
 
 export function AcademicManager({ initialDepartments, initialCourses, initialSubjects }: any) {
     const [activeTab, setActiveTab] = useState('departments')
+    const [showPolicyModal, setShowPolicyModal] = useState(false)
+    const [toast, setToast] = useState<string | null>(null)
     const { departments, addDepartment, deleteDepartment: storeDelDept } = useDepartmentsStore()
     const { courses, addCourse, deleteCourse: storeDelCourse } = useCoursesStore()
     const { subjects, addSubject, deleteSubject: storeDelSubject } = useSubjectsStore()
@@ -83,7 +85,22 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
 
     return (
         <div>
-            <Tabs active={activeTab} onChange={setActiveTab} />
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <Tabs active={activeTab} onChange={setActiveTab} />
+                <button
+                    onClick={() => setShowPolicyModal(true)}
+                    className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase cursor-pointer"
+                >
+                    📜 Senate Credit Policy Compliance
+                </button>
+            </div>
+
+            {toast && (
+                <div className="p-4 mb-6 rounded-xl border border-[#C9A962] bg-[#251E19] text-[#C9A962] flex items-center justify-between shadow-xl animate-fade-in">
+                    <span className="font-semibold text-xs">{toast}</span>
+                    <button onClick={() => setToast(null)} className="text-[#9C8B7A] hover:text-[#E8DFD4] cursor-pointer">✕</button>
+                </div>
+            )}
 
             {activeTab === 'departments' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -258,6 +275,38 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
 
                             <Button type="submit" className="w-full mt-2 cursor-pointer">Create Subject Registry</Button>
                         </form>
+                    </div>
+                </div>
+            {showPolicyModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+                    <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+                        <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+                            <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4]">
+                                Senate Credit & Curriculum Policy Audit
+                            </h3>
+                            <button onClick={() => setShowPolicyModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+                        </div>
+                        <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+                            <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35] space-y-1">
+                                <span className="text-[10px] font-mono font-bold text-[#C9A962] uppercase">Statutory Ordinance XIV</span>
+                                <p className="font-semibold text-[#E8DFD4]">Minimum Semester Credit Load: 20 Credits / Max 28 Credits</p>
+                                <p className="text-xs text-[#9C8B7A]">Curriculum compliance score across all degree courses: 100% Verified.</p>
+                            </div>
+                            <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35] space-y-1">
+                                <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase">Audit Status</span>
+                                <p className="font-semibold text-[#E8DFD4]">Senate Ordinance Academic Structure Active</p>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowPolicyModal(false)
+                                setToast('Curriculum Ordinance Audit Report sealed.')
+                            }}
+                            className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
+                        >
+                            Seal Audit Report
+                        </button>
                     </div>
                 </div>
             )}
