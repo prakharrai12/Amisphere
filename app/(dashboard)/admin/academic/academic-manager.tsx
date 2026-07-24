@@ -277,6 +277,7 @@ export function AcademicManager({ initialDepartments, initialCourses, initialSub
                         </form>
                     </div>
                 </div>
+            )}
             {showPolicyModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
                     <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">

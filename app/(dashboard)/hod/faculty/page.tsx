@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Users, Award, ShieldCheck, Mail, Phone, MapPin, CheckCircle2 } from 'lucide-react'
 import { demoFacultyDirectory } from '@/lib/demo-data'
 
