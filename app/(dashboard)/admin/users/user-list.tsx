@@ -223,6 +223,12 @@ export function UserList({ initialUsers }: { initialUsers: any[] }) {
           </div>
 
           <button
+            onClick={() => setToast('Bulk Invitation Link generated for 25 incoming CS Scholars.')}
+            className="px-3.5 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer font-[var(--font-cinzel)] uppercase shrink-0"
+          >
+            ✉️ Bulk Invite Link
+          </button>
+          <button
             onClick={() => {
               handleAutoGenerateRollNo()
               handleAutoGeneratePassword()
