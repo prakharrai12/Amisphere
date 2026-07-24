@@ -32,6 +32,9 @@ export default function StudentAttendancePage() {
     setTimeout(() => setToastMessage(null), 5000)
   }
 
+  const [showCalcModal, setShowCalcModal] = useState(false)
+  const [calcTarget, setCalcTarget] = useState(75)
+
   return (
     <div className="p-8 space-y-8 min-h-screen">
       {toastMessage && (
@@ -58,13 +61,21 @@ export default function StudentAttendancePage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer shrink-0"
-        >
-          <PlusCircle className="h-4 w-4 text-[#1C1714]" />
-          <span>File Regularization Petition</span>
-        </button>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowCalcModal(true)}
+            className="px-4 py-3 rounded-md border border-[#C9A962]/50 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer"
+          >
+            🧮 Margin Calculator
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 cursor-pointer"
+          >
+            <PlusCircle className="h-4 w-4 text-[#1C1714]" />
+            <span>File Regularization Petition</span>
+          </button>
+        </div>
       </div>
 
       {/* Attendance Overview Matrix */}
@@ -283,6 +294,61 @@ export default function StudentAttendancePage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showCalcModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Clock className="h-5 w-5 text-[#C9A962]" /> Statutory Margin Calculator
+              </h3>
+              <button onClick={() => setShowCalcModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <p className="text-xs text-[#9C8B7A]">
+                Calculate minimum consecutive lectures required to hit your target attendance quota.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-2">Target Quota Percentage</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[75, 80, 85].map(pct => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => setCalcTarget(pct)}
+                      className={`py-2 rounded-lg text-xs font-mono font-bold transition cursor-pointer border ${
+                        calcTarget === pct ? 'bg-[#1C1714] text-[#C9A962] border-[#C9A962]' : 'bg-[#251E19] text-[#9C8B7A] border-[#4A3F35]'
+                      }`}
+                    >
+                      {pct}%
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="p-4 rounded-xl bg-[#1C1714] border border-[#4A3F35] space-y-2">
+                {initialAttendanceSummary.map(sub => {
+                  const needed = Math.max(0, Math.ceil((calcTarget * sub.totalLectures - 100 * sub.attendedLectures) / (100 - calcTarget)))
+                  return (
+                    <div key={sub.subjectId} className="flex items-center justify-between text-xs">
+                      <span className="text-[#E8DFD4] font-medium">{sub.subjectCode}</span>
+                      <span className="font-mono text-[#C9A962]">
+                        {needed === 0 ? '✓ Target Met' : `+${needed} lectures required`}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowCalcModal(false)}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
+            >
+              Done
+            </button>
           </div>
         </div>
       )}
