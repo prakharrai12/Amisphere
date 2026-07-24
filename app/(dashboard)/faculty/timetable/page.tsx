@@ -8,11 +8,30 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 export default function FacultyTimetablePage() {
   const [selectedDay, setSelectedDay] = useState('Monday')
+  const [showSwapModal, setShowSwapModal] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
   const mySchedule = demoWeeklyTimetable.filter(item => item.instructor.includes('Singh'))
   const daySchedule = mySchedule.filter(item => item.day === selectedDay)
 
+  const handleSwapSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setToast(`Slot swap request submitted to HOD Secretariat for administrative approval.`)
+    setShowSwapModal(false)
+    setTimeout(() => setToast(null), 5000)
+  }
+
   return (
     <div className="p-8 space-y-8 min-h-screen">
+      {toast && (
+        <div className="p-4 rounded-xl border border-[#C9A962] bg-[#251E19] text-[#C9A962] flex items-center justify-between shadow-xl animate-fade-in">
+          <div className="flex items-center gap-3">
+            <Calendar className="h-5 w-5" />
+            <span className="font-semibold text-xs">{toast}</span>
+          </div>
+          <button onClick={() => setToast(null)} className="text-[#9C8B7A] hover:text-[#E8DFD4] cursor-pointer">✕</button>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#4A3F35]">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A962] font-[var(--font-cinzel)]">
@@ -27,20 +46,28 @@ export default function FacultyTimetablePage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#251E19] p-1.5 rounded-xl border border-[#4A3F35]">
-          {days.map(day => (
-            <button
-              key={day}
-              onClick={() => setSelectedDay(day)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium font-[var(--font-cinzel)] uppercase tracking-wider transition ${
-                selectedDay === day
-                  ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
-                  : 'text-[#9C8B7A] hover:text-[#E8DFD4]'
-              }`}
-            >
-              {day.slice(0, 3)}
-            </button>
-          ))}
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={() => setShowSwapModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer"
+          >
+            🔄 Request Slot Swap
+          </button>
+          <div className="flex items-center gap-2 bg-[#251E19] p-1.5 rounded-xl border border-[#4A3F35]">
+            {days.map(day => (
+              <button
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium font-[var(--font-cinzel)] uppercase tracking-wider transition ${
+                  selectedDay === day
+                    ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
+                    : 'text-[#9C8B7A] hover:text-[#E8DFD4]'
+                }`}
+              >
+                {day.slice(0, 3)}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -127,6 +154,62 @@ export default function FacultyTimetablePage() {
           </tbody>
         </table>
       </div>
+
+      {showSwapModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-[#C9A962]" /> Emergency Slot Swap Request
+              </h3>
+              <button onClick={() => setShowSwapModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <form onSubmit={handleSwapSubmit} className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Target Lecture Slot</label>
+                <select className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]">
+                  {mySchedule.map(s => (
+                    <option key={s.id} value={s.id}>{s.day} • {s.timeSlot} • {s.subjectCode}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Substitute Faculty Colleague</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Dr. Ramesh Kumar (CS Dept)"
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Justification Reason</label>
+                <textarea
+                  required
+                  rows={3}
+                  placeholder="State reason for slot adjustment (e.g. Conference attendance)..."
+                  className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-3 text-xs outline-none focus:border-[#C9A962]"
+                ></textarea>
+              </div>
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#4A3F35]">
+                <button
+                  type="button"
+                  onClick={() => setShowSwapModal(false)}
+                  className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] text-xs uppercase font-[var(--font-cinzel)]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] uppercase tracking-wider shadow-md cursor-pointer"
+                >
+                  Submit Swap Petition
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
