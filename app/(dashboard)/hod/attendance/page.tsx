@@ -15,6 +15,8 @@ export default function HodAttendanceCoveragePage() {
   const [coverage, setCoverage] = useState(initialDeptCoverage)
   const [toast, setToast] = useState<string | null>(null)
 
+  const [showNoticeModal, setShowNoticeModal] = useState(false)
+
   const handleExport = () => {
     exportToCSV(coverage.map(c => ({
       'Course Code': c.subjectCode,
@@ -26,6 +28,13 @@ export default function HodAttendanceCoveragePage() {
       'Compliance Status': c.status
     })), `HOD_Attendance_Coverage_${new Date().toISOString().split('T')[0]}`)
     setToast('Department attendance coverage ledger exported to CSV format.')
+    setTimeout(() => setToast(null), 5000)
+  }
+
+  const handleDispatchParentNotices = (e: React.FormEvent) => {
+    e.preventDefault()
+    setToast(`Parent advisory notices dispatched via SMS & Email for 7 low-attendance scholars across Computer Science department.`)
+    setShowNoticeModal(false)
     setTimeout(() => setToast(null), 5000)
   }
 
@@ -55,13 +64,21 @@ export default function HodAttendanceCoveragePage() {
           </p>
         </div>
 
-        <button
-          onClick={handleExport}
-          className="px-5 py-2.5 rounded-lg brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer font-[var(--font-cinzel)] tracking-wider uppercase shrink-0"
-        >
-          <Download className="h-4 w-4" />
-          <span>Export Audit Ledger</span>
-        </button>
+        <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <button
+            onClick={() => setShowNoticeModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase cursor-pointer"
+          >
+            📩 Dispatch Parent Alerts
+          </button>
+          <button
+            onClick={handleExport}
+            className="px-5 py-2.5 rounded-lg brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer font-[var(--font-cinzel)] tracking-wider uppercase"
+          >
+            <Download className="h-4 w-4" />
+            <span>Export Audit Ledger</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -152,6 +169,51 @@ export default function HodAttendanceCoveragePage() {
           </table>
         </div>
       </div>
+
+      {showNoticeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-md w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-[#C9A962]" /> Batch Parent Advisory Dispatch
+              </h3>
+              <button onClick={() => setShowNoticeModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <form onSubmit={handleDispatchParentNotices} className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#4A3F35] text-xs space-y-1">
+                <p className="font-mono text-[#C9A962] font-semibold">Target Cohort: 7 Deficit Scholars (&lt;75% Attendance)</p>
+                <p className="text-[#9C8B7A]">Department: Computer Science & Engineering</p>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] mb-1">Dispatch Channels</label>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-[#E8DFD4] cursor-pointer">
+                    <input type="checkbox" defaultChecked className="accent-[#C9A962]" /> Official Parent Portal Notification
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-[#E8DFD4] cursor-pointer">
+                    <input type="checkbox" defaultChecked className="accent-[#C9A962]" /> Registered Guardian SMS Alert
+                  </label>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#4A3F35]">
+                <button
+                  type="button"
+                  onClick={() => setShowNoticeModal(false)}
+                  className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] text-xs uppercase font-[var(--font-cinzel)]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold font-[var(--font-cinzel)] uppercase tracking-wider shadow-md cursor-pointer"
+                >
+                  Transmit Warnings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
