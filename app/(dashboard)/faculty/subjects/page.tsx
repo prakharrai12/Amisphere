@@ -9,6 +9,8 @@ export default function FacultySubjectsPage() {
   const [syllabusProgress, setSyllabusProgress] = useState(85)
   const [toast, setToast] = useState<string | null>(null)
 
+  const [showBooksModal, setShowBooksModal] = useState(false)
+
   const currentSubject = demoSubjects.find(s => s.code === selectedSubjectCode) || demoSubjects[0]
 
   const handleSaveProgress = (e: React.FormEvent) => {
@@ -43,7 +45,13 @@ export default function FacultySubjectsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <button
+            onClick={() => setShowBooksModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] uppercase cursor-pointer"
+          >
+            📚 Prescribed Books
+          </button>
           <select
             value={selectedSubjectCode}
             onChange={(e) => setSelectedSubjectCode(e.target.value)}
@@ -205,6 +213,43 @@ export default function FacultySubjectsPage() {
           </div>
         </div>
       </div>
+
+      {showBooksModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-[#C9A962]" /> {currentSubject.code} Prescribed Textbooks & References
+              </h3>
+              <button onClick={() => setShowBooksModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm max-h-[50vh] overflow-y-auto pr-1 divide-y divide-[#4A3F35]">
+              <div className="py-2.5">
+                <span className="text-[10px] font-mono font-bold text-[#C9A962] uppercase">Primary Textbook (Statutory)</span>
+                <p className="font-bold text-base text-[#E8DFD4] mt-0.5">Introduction to Algorithms (4th Edition)</p>
+                <p className="text-xs text-[#9C8B7A]">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein • MIT Press</p>
+              </div>
+              <div className="py-2.5">
+                <span className="text-[10px] font-mono font-bold text-[#C9A962] uppercase">Reference Literature</span>
+                <p className="font-bold text-base text-[#E8DFD4] mt-0.5">Algorithm Design & Analysis</p>
+                <p className="text-xs text-[#9C8B7A]">Jon Kleinberg, Éva Tardos • Pearson Academic Edition</p>
+              </div>
+              <div className="py-2.5">
+                <span className="text-[10px] font-mono font-bold text-[#C9A962] uppercase">Digital Library Repository</span>
+                <p className="font-bold text-base text-[#E8DFD4] mt-0.5">Amisphere University E-Library Digital Portal</p>
+                <p className="text-xs text-[#9C8B7A]">Unlimited access for enrolled scholars under Institutional Access Token.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowBooksModal(false)}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
+            >
+              Close Bibliography
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
