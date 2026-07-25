@@ -345,6 +345,24 @@ export default function FacultyAssignmentsPage() {
                         </p>
                       </div>
 
+                      <div className="p-3 rounded-xl bg-[#251E19] border border-[#C9A962]/40 space-y-2">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] block">Multi-Criteria Evaluation Rubric</span>
+                        <div className="grid grid-cols-3 gap-2 text-[11px] font-mono">
+                          <div className="p-2 rounded bg-[#1C1714] border border-[#4A3F35]">
+                            <span className="text-[#9C8B7A] block text-[9px] uppercase">Algorithmic Depth (40%)</span>
+                            <span className="text-[#E8DFD4] font-bold">38 / 40 pts</span>
+                          </div>
+                          <div className="p-2 rounded bg-[#1C1714] border border-[#4A3F35]">
+                            <span className="text-[#9C8B7A] block text-[9px] uppercase">Code Quality (30%)</span>
+                            <span className="text-[#E8DFD4] font-bold">28 / 30 pts</span>
+                          </div>
+                          <div className="p-2 rounded bg-[#1C1714] border border-[#4A3F35]">
+                            <span className="text-[#9C8B7A] block text-[9px] uppercase">Documentation (30%)</span>
+                            <span className="text-[#E8DFD4] font-bold">26 / 30 pts</span>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center pt-1">
                         <div className="sm:col-span-1">
                           <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
