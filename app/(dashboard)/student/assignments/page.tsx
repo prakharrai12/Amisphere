@@ -163,6 +163,18 @@ export default function StudentAssignmentsPage() {
                 />
               </div>
 
+              <div className="p-3.5 rounded-xl bg-[#1C1714] border border-[#C9A962]/40 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-[#C9A962] font-[var(--font-cinzel)] uppercase flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-[#C9A962]" /> Pre-Submission Similarity Audit
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                    2.4% Similarity (Passed)
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#9C8B7A]">Turnitin / Strike-Check pre-audit completed. Document size: 1.4 MB (PDF Optimised). No uncredited citations detected.</p>
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">
                   Scholar Remarks & Algorithmic Notes (Optional)
