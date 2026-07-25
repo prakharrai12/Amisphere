@@ -20,6 +20,7 @@ import { useRegularizationStore } from '@/lib/hybrid-store'
 export default function HODDashboard() {
   const { requests, updateRequestStatus } = useRegularizationStore()
   const [toast, setToast] = useState<string | null>(null)
+  const [showBudgetModal, setShowBudgetModal] = useState(false)
 
   const pendingRequests = requests.filter(r => r.status === 'Pending Review')
 
@@ -76,7 +77,13 @@ export default function HODDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowBudgetModal(true)}
+              className="px-4 py-3 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs shadow-md font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer"
+            >
+              <span>Budget & Lab Audit</span>
+            </button>
             <Link
               href="/hod/requests"
               className="px-5 py-3 rounded-md brass-gradient text-xs shadow-lg flex items-center gap-2 font-semibold"
@@ -225,6 +232,45 @@ export default function HODDashboard() {
           </div>
         </div>
       </div>
+
+      {showBudgetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-[#C9A962]" /> Annual Departmental Budget & Lab Audit
+              </h3>
+              <button onClick={() => setShowBudgetModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div className="p-4 rounded-xl bg-[#1C1714] border border-[#C9A962]/40 space-y-2">
+                <span className="text-xs uppercase font-semibold text-[#C9A962] font-[var(--font-cinzel)] block">FY 2026-27 CAPEX / OPEX Allocation</span>
+                <div className="flex justify-between items-center text-xs font-mono">
+                  <span>Utilized: ₹18.4 Lakhs</span>
+                  <span className="text-emerald-400 font-bold">Total: ₹25.0 Lakhs (73.6%)</span>
+                </div>
+                <div className="w-full bg-[#251E19] h-2 rounded-full overflow-hidden border border-[#4A3F35]">
+                  <div className="bg-[#C9A962] h-full" style={{ width: '73.6%' }}></div>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] space-y-1.5 text-xs text-[#9C8B7A]">
+                <span className="font-bold text-[#E8DFD4] block font-serif">Lab Equipment Audit Status</span>
+                <p>Systems Lab SL-204: 35 GPU Workstations verified & serviced. Hardware renewal requisition pending Bursar sign-off.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowBudgetModal(false)
+                setToast('Departmental Budget Audit Summary exported to Dean Academic Secretariat.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Export Budget Audit Report
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
