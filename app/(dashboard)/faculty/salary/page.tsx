@@ -245,6 +245,23 @@ export default function FacultySalaryPage() {
                 <div className="flex justify-between font-bold border-t border-[#4A3F35] pt-1 mt-1 text-[#E8DFD4]"><span>Net Taxable Income:</span><span>₹22,10,000</span></div>
               </div>
             </div>
+            <div className="flex justify-end gap-3 pt-3 border-t border-[#4A3F35]">
+              <button onClick={() => setShowForm16Modal(false)} className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] hover:bg-[#1C1714] text-xs uppercase font-[var(--font-cinzel)] cursor-pointer">
+                Close
+              </button>
+              <button onClick={handleRequestForm16} className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] shadow-md cursor-pointer">
+                Download Digitally Signed PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFinanceTicketModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 print:hidden animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-[#C9A962]" /> Submit Finance & Tax Query Ticket
               </h3>
               <button onClick={() => setShowFinanceTicketModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>

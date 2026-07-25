@@ -101,13 +101,20 @@ export default function HODRequestsPage() {
           </p>
         </div>
 
-                  ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
-                  : 'bg-[#251E19] text-[#9C8B7A] border border-[#4A3F35] hover:border-[#C9A962]/40'
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowWorkloadModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>⚖️ Workload Credit Inspector</span>
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase flex items-center gap-2 transition cursor-pointer"
+          >
+            <Download className="h-4 w-4" />
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
