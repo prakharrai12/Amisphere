@@ -7,6 +7,7 @@ import { Bell, Plus, CheckCircle2, ShieldCheck, Megaphone, Trash2 } from 'lucide
 export default function AdminAnnouncementsPage() {
   const { announcements, addAnnouncement, deleteAnnouncement } = useAnnouncementsStore()
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showCalendarSyncModal, setShowCalendarSyncModal] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newCategory, setNewCategory] = useState('Examination Council')
   const [newPriority, setNewPriority] = useState('Urgent Directive')
@@ -55,13 +56,21 @@ export default function AdminAnnouncementsPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="px-5 py-2.5 rounded-lg brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer font-[var(--font-cinzel)] tracking-wider uppercase shrink-0"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Promulgate Directive</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowCalendarSyncModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>📅 Academic Calendar Broadcaster</span>
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-5 py-2.5 rounded-lg brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer font-[var(--font-cinzel)] tracking-wider uppercase shrink-0"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Promulgate Directive</span>
+          </button>
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -191,6 +200,42 @@ export default function AdminAnnouncementsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showCalendarSyncModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Bell className="h-5 w-5 text-[#C9A962]" /> Academic Calendar Milestone Broadcaster
+              </h3>
+              <button onClick={() => setShowCalendarSyncModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Promulgate Key Academic Dates</span>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] flex justify-between">
+                  <span>Mid-Semester Examinations</span>
+                  <span className="text-[#C9A962]">Aug 10 - Aug 18, 2026</span>
+                </div>
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] flex justify-between">
+                  <span>End-Semester Project Viva</span>
+                  <span className="text-[#C9A962]">Nov 25 - Dec 02, 2026</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowCalendarSyncModal(false)
+                setToast('Academic calendar sync feed (.ICS) published to student and faculty calendars.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Broadcaster Feed Sync (.ICS)
+            </button>
           </div>
         </div>
       )}
