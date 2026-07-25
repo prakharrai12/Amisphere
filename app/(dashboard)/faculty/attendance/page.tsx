@@ -16,6 +16,7 @@ export default function FacultyAttendancePage() {
   const [toast, setToast] = useState<string | null>(null)
 
   const [showSessionRemarksModal, setShowSessionRemarksModal] = useState(false)
+  const [showRiskModal, setShowRiskModal] = useState(false)
   const [sessionNotes, setSessionNotes] = useState('')
 
   const handleSaveRegister = () => {
@@ -92,6 +93,12 @@ export default function FacultyAttendancePage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowRiskModal(true)}
+            className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>⚠️ Risk Assessment Radar</span>
+          </button>
           <button
             onClick={() => setActiveTab('roster')}
             className={`px-4 py-2.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer ${
@@ -451,6 +458,41 @@ export default function FacultyAttendancePage() {
                 Save Notes & Seal Register
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showRiskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-[#C9A962]" /> Scholar Risk Assessment Radar
+              </h3>
+              <button onClick={() => setShowRiskModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Low Attendance & Academic Deficit Risk Matrix</span>
+              <div className="space-y-2">
+                <div className="p-3 rounded-lg border border-amber-500/40 bg-[#1C1714] flex justify-between items-center text-xs">
+                  <div>
+                    <span className="font-bold text-[#E8DFD4] block">Naitik Sharma (A2040522106)</span>
+                    <span className="text-amber-400 font-mono">Attendance: 68.2% (Deficit: 6.8%)</span>
+                  </div>
+                  <button onClick={() => { setShowRiskModal(false); setToast('Remedial slot notification dispatched to Naitik Sharma.'); setTimeout(() => setToast(null), 4000); }} className="px-3 py-1 rounded border border-amber-500/60 bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold uppercase cursor-pointer">Schedule Remedial</button>
+                </div>
+                <div className="p-3 rounded-lg border border-rose-500/40 bg-[#1C1714] flex justify-between items-center text-xs">
+                  <div>
+                    <span className="font-bold text-[#E8DFD4] block">Mounish Kumar (A2040522107)</span>
+                    <span className="text-rose-400 font-mono">Attendance: 62.5% (Critical Warning)</span>
+                  </div>
+                  <button onClick={() => { setShowRiskModal(false); setToast('Parent deficit alert dispatched for Mounish Kumar.'); setTimeout(() => setToast(null), 4000); }} className="px-3 py-1 rounded border border-rose-500/60 bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold uppercase cursor-pointer">Parent Alert</button>
+                </div>
+              </div>
+            </div>
+            <button onClick={() => setShowRiskModal(false)} className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer">
+              Close Risk Matrix
+            </button>
           </div>
         </div>
       )}
