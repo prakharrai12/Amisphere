@@ -25,6 +25,7 @@ export default function AllocationPage() {
   const [selectedSubject, setSelectedSubject] = useState('')
   const [sessionYear, setSessionYear] = useState('2026-2027 (Odd Sem)')
   const [toast, setToast] = useState<string | null>(null)
+  const [showRoomAuditModal, setShowRoomAuditModal] = useState(false)
 
   const handleAssign = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,6 +87,13 @@ export default function AllocationPage() {
             Assign professors and department chairs to specific course subjects across all university semesters.
           </p>
         </div>
+
+        <button
+          onClick={() => setShowRoomAuditModal(true)}
+          className="px-4 py-2.5 rounded-lg border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer shrink-0"
+        >
+          <span>🏢 Room & Asset Infrastructure Audit</span>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -180,6 +188,42 @@ export default function AllocationPage() {
           </div>
         </div>
       </div>
+
+      {showRoomAuditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Users className="h-5 w-5 text-[#C9A962]" /> Room & Asset Infrastructure Audit
+              </h3>
+              <button onClick={() => setShowRoomAuditModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Classroom Infrastructure Condition Scoring</span>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] space-y-1">
+                  <div className="flex justify-between font-bold text-[#E8DFD4]"><span>LT-101 Ramanujan Hall</span><span className="text-emerald-400">Optimal (98%)</span></div>
+                  <span className="text-[10px] text-[#9C8B7A] block">Smart Projector, HVAC, Surround PA system fully functional.</span>
+                </div>
+                <div className="p-3 rounded-lg border border-amber-500/40 bg-[#1C1714] space-y-1">
+                  <div className="flex justify-between font-bold text-[#E8DFD4]"><span>SL-204 Systems Lab</span><span className="text-amber-400">Maintenance Pending</span></div>
+                  <span className="text-[10px] text-[#9C8B7A] block">Workstation #12 GPU driver glitch logged. Estate Maintenance dispatched.</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowRoomAuditModal(false)
+                setToast('Campus Maintenance Ticket #EST-2026-904 dispatched to Estate Officer.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Dispatch Maintenance Workorder
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
