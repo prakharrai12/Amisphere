@@ -9,6 +9,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 export default function StudentTimetablePage() {
   const [selectedDay, setSelectedDay] = useState('Monday')
   const [showVenueModal, setShowVenueModal] = useState(false)
+  const [showHallTicketModal, setShowHallTicketModal] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
   const daySchedule = demoWeeklyTimetable.filter(item => item.day === selectedDay)
@@ -45,6 +46,12 @@ export default function StudentTimetablePage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowHallTicketModal(true)}
+            className="px-4 py-2 rounded-lg border border-[#C9A962]/50 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>🎫 Exam Seat & Hall Ticket</span>
+          </button>
           <button
             onClick={() => setShowVenueModal(true)}
             className="px-4 py-2 rounded-lg border border-[#C9A962]/50 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
@@ -191,6 +198,41 @@ export default function StudentTimetablePage() {
               className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md cursor-pointer"
             >
               Close Directory
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showHallTicketModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-emerald-500/60 bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-emerald-400" /> Digital Hall Ticket & Seat Matrix
+              </h3>
+              <button onClick={() => setShowHallTicketModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="p-4 rounded-xl bg-[#1C1714] border border-emerald-500/30 space-y-3 font-[var(--font-crimson)] text-sm">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-bold text-[#E8DFD4] font-serif">Scholar: Prakhar Rai</span>
+                <span className="font-mono text-emerald-400 font-bold">Desk Code: B-304 / Seat 12</span>
+              </div>
+              <p className="text-xs text-[#9C8B7A]">Controller of Examinations verified. Candidate authorized for Mid-Semester Examinations (Aug 2026).</p>
+              <div className="text-xs space-y-1 font-mono text-[#9C8B7A] pt-2 border-t border-[#4A3F35]">
+                <div className="flex justify-between"><span>CS205 Operating Systems</span><span className="text-[#C9A962]">Aug 10 • Hall LT-101</span></div>
+                <div className="flex justify-between"><span>CS204 Database Systems</span><span className="text-[#C9A962]">Aug 12 • Hall LT-102</span></div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowHallTicketModal(false)
+                setToast('Digital Hall Ticket downloaded with cryptographic Senate seal.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md border border-emerald-500/60 bg-emerald-500/20 text-emerald-400 font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Download Sealed Hall Ticket (.PDF)
             </button>
           </div>
         </div>
