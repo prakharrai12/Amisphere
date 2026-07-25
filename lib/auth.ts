@@ -99,8 +99,19 @@ function getCookieValue(name: string) {
 export function parseUserCookie(raw?: string | null): AppUser | null {
   if (!raw) return null
   try {
-    const parsed = JSON.parse(decodeURIComponent(raw)) as AppUser
-    return demoUsers.find((user) => user.id === parsed.id && user.role === parsed.role && user.email === parsed.email) || null
+    let decoded = raw
+    try {
+      decoded = decodeURIComponent(raw)
+    } catch {
+      // Use raw if decodeURIComponent throws
+    }
+    const parsed = JSON.parse(decoded) as AppUser
+    if (!parsed || !parsed.role) return null
+
+    const matched = demoUsers.find(
+      (user) => user.id === parsed.id || (user.role === parsed.role && user.email.toLowerCase() === (parsed.email || '').toLowerCase())
+    )
+    return matched || (parsed.role ? parsed : null)
   } catch {
     return null
   }

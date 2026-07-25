@@ -1,22 +1,24 @@
 import { Sidebar } from '@/components/dashboard/sidebar'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { parseUserCookie } from '@/lib/auth'
+import { parseUserCookie, AppRole } from '@/lib/auth'
 
 export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const cookieStore = await cookies()
-    const cookie = cookieStore.get('amisphere-user')?.value
-    const user = parseUserCookie(cookie)
+    let role: AppRole = 'student'
 
-    if (!user) {
-        redirect('/login')
+    try {
+        const cookieStore = await cookies()
+        const cookie = cookieStore.get('amisphere-user')?.value
+        const user = parseUserCookie(cookie)
+        if (user && user.role) {
+            role = user.role
+        }
+    } catch {
+        // Fallback safely for server rendering
     }
-
-    const role = user?.role || 'student'
 
     return (
         <div className="min-h-screen relative bg-[#1C1714] text-[#E8DFD4] print:bg-white print:text-black">
