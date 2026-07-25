@@ -202,6 +202,14 @@ export default function StudentResultsPage() {
                   className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs font-mono outline-none focus:border-[#C9A962]"
                 />
               </div>
+              <div className="p-3 rounded-lg bg-[#1C1714] border border-[#4A3F35] space-y-2">
+                <span className="text-[10px] uppercase font-semibold text-[#C9A962] font-[var(--font-cinzel)] block">Simulated Subject Weightage Plan</span>
+                <div className="text-xs space-y-1 font-mono text-[#9C8B7A]">
+                  <div className="flex justify-between"><span>Core Algorithms (4 Cr)</span><span className="text-[#C9A962]">Target Grade: O (10 pts)</span></div>
+                  <div className="flex justify-between"><span>Database Systems (4 Cr)</span><span className="text-[#C9A962]">Target Grade: A+ (10 pts)</span></div>
+                  <div className="flex justify-between"><span>Computer Networks (3 Cr)</span><span className="text-[#C9A962]">Target Grade: A (9 pts)</span></div>
+                </div>
+              </div>
               <div className="p-4 rounded-xl bg-[#1C1714] border border-[#C9A962]/40 space-y-1">
                 <span className="text-[11px] uppercase tracking-wider text-[#9C8B7A] font-[var(--font-cinzel)] block">Projected Cumulative GPA</span>
                 <span className="text-3xl font-bold font-mono text-[#C9A962]">{simulatedCGPA.toFixed(2)}</span>
@@ -210,7 +218,7 @@ export default function StudentResultsPage() {
               <button
                 type="button"
                 onClick={() => setShowSimulator(false)}
-                className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-semibold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md mt-2"
+                className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] text-xs font-semibold uppercase font-[var(--font-cinzel)] tracking-wider shadow-md mt-2 cursor-pointer"
               >
                 Close Projection
               </button>
