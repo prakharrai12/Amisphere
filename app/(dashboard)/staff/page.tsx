@@ -8,6 +8,7 @@ export default function StaffDashboardPage() {
   const { tasks, addTask, updateTaskStatus } = useStaffTasksStore()
   const [showAddModal, setShowAddModal] = useState(false)
   const [showGatePassModal, setShowGatePassModal] = useState(false)
+  const [showInventoryModal, setShowInventoryModal] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newLocation, setNewLocation] = useState('Academic Block A • Basement 2')
   const [newPriority, setNewPriority] = useState('Urgent Directive')
@@ -59,6 +60,12 @@ export default function StaffDashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowInventoryModal(true)}
+            className="px-4 py-2.5 rounded-xl border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>📦 Office Inventory & Requisition</span>
+          </button>
           <button
             onClick={() => setShowGatePassModal(true)}
             className="px-4 py-2.5 rounded-xl border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
@@ -266,6 +273,42 @@ export default function StaffDashboardPage() {
               className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
             >
               Issue Digital Gate Pass & Vehicle Badge
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showInventoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <ClipboardList className="h-5 w-5 text-[#C9A962]" /> Office Inventory & Stock Requisition
+              </h3>
+              <button onClick={() => setShowInventoryModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Department Store Requisition Request</span>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] flex justify-between">
+                  <span>A4 High-Grade Examination Answer Sheets (50 Rims)</span>
+                  <span className="text-emerald-400 font-bold">In Stock</span>
+                </div>
+                <div className="p-3 rounded-lg border border-amber-500/40 bg-[#1C1714] flex justify-between">
+                  <span>Smart Podium Laser Pointers & Batteries (10 Pcs)</span>
+                  <span className="text-amber-400 font-bold">Re-order Alert</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowInventoryModal(false)
+                setToast('Inventory requisition voucher #REQ-2026-441 dispatched to Central Store Keeper.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Dispatch Store Requisition Voucher
             </button>
           </div>
         </div>
