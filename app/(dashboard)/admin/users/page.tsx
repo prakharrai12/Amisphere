@@ -1,13 +1,24 @@
 import { createClient } from '@/lib/supabase/server'
 import { UserList } from './user-list'
-import { Users, ShieldCheck } from 'lucide-react'
+import { Users } from 'lucide-react'
+import { demoUsers } from '@/lib/auth'
 
 export default async function UsersPage() {
-  const supabase = await createClient()
-  const { data: users } = await supabase
-    .from('users')
-    .select('*')
-    .order('created_at', { ascending: false })
+  let userList = demoUsers
+
+  try {
+    const supabase = await createClient()
+    const { data: users } = await supabase
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (users && users.length > 0) {
+      userList = users as any
+    }
+  } catch {
+    // Fallback to demoUsers on error
+  }
 
   return (
     <div className="p-8 space-y-8 min-h-screen">
@@ -26,7 +37,7 @@ export default async function UsersPage() {
         </div>
       </div>
 
-      <UserList initialUsers={users || []} />
+      <UserList initialUsers={userList} />
     </div>
   )
 }

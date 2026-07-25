@@ -1,13 +1,26 @@
 import { createClient } from '@/lib/supabase/server'
 import { AcademicManager } from './academic-manager'
-import { BookOpen, ShieldCheck } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
+import { demoDepartments, demoCourses, demoSubjects } from '@/lib/demo-data'
 
 export default async function AcademicPage() {
-  const supabase = await createClient()
+  let departments = demoDepartments
+  let courses = demoCourses
+  let subjects = demoSubjects
 
-  const { data: departments } = await supabase.from('departments').select('*').order('name')
-  const { data: courses } = await supabase.from('courses').select('*, departments(name)').order('name')
-  const { data: subjects } = await supabase.from('subjects').select('*, courses(name)').order('name')
+  try {
+    const supabase = await createClient()
+
+    const { data: deptData } = await supabase.from('departments').select('*').order('name')
+    const { data: crsData } = await supabase.from('courses').select('*, departments(name)').order('name')
+    const { data: sbjData } = await supabase.from('subjects').select('*, courses(name)').order('name')
+
+    if (deptData && deptData.length > 0) departments = deptData as any
+    if (crsData && crsData.length > 0) courses = crsData as any
+    if (sbjData && sbjData.length > 0) subjects = sbjData as any
+  } catch {
+    // Fallback to demo datasets on error
+  }
 
   return (
     <div className="p-8 space-y-8 min-h-screen">
@@ -27,9 +40,9 @@ export default async function AcademicPage() {
       </div>
 
       <AcademicManager
-        initialDepartments={departments || []}
-        initialCourses={courses || []}
-        initialSubjects={subjects || []}
+        initialDepartments={departments}
+        initialCourses={courses}
+        initialSubjects={subjects}
       />
     </div>
   )
