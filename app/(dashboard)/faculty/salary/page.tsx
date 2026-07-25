@@ -7,6 +7,7 @@ import { demoFacultySalary } from '@/lib/demo-data'
 export default function FacultySalaryPage() {
   const [showSlipModal, setShowSlipModal] = useState(false)
   const [showForm16Modal, setShowForm16Modal] = useState(false)
+  const [showFinanceTicketModal, setShowFinanceTicketModal] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
   const handleRequestForm16 = () => {
@@ -43,6 +44,12 @@ export default function FacultySalaryPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowFinanceTicketModal(true)}
+              className="px-4 py-3 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition"
+            >
+              <span>Finance Query Ticket</span>
+            </button>
             <button
               onClick={() => setShowForm16Modal(true)}
               className="px-4 py-3 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs shadow-md flex items-center gap-2 cursor-pointer font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition"
@@ -238,12 +245,37 @@ export default function FacultySalaryPage() {
                 <div className="flex justify-between font-bold border-t border-[#4A3F35] pt-1 mt-1 text-[#E8DFD4]"><span>Net Taxable Income:</span><span>₹22,10,000</span></div>
               </div>
             </div>
+                <DollarSign className="h-5 w-5 text-[#C9A962]" /> Submit Finance & Tax Query Ticket
+              </h3>
+              <button onClick={() => setShowFinanceTicketModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-4 font-[var(--font-crimson)] text-sm">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">Query Type</label>
+                <select className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]">
+                  <option>TDS Deduction Discrepancy</option>
+                  <option>Dearness Allowance (DA) Revision</option>
+                  <option>Reimbursement Claim Status</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C9A962] font-[var(--font-cinzel)] mb-1">Description & Reference Notes</label>
+                <textarea rows={3} placeholder="State discrepancy details for Comptroller Secretariat..." className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]"></textarea>
+              </div>
+            </div>
             <div className="flex justify-end gap-3 pt-3 border-t border-[#4A3F35]">
-              <button onClick={() => setShowForm16Modal(false)} className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] hover:bg-[#1C1714] text-xs uppercase font-[var(--font-cinzel)] cursor-pointer">
-                Close
+              <button onClick={() => setShowFinanceTicketModal(false)} className="px-4 py-2 rounded-md border border-[#4A3F35] text-[#9C8B7A] hover:bg-[#1C1714] text-xs uppercase font-[var(--font-cinzel)] cursor-pointer">
+                Cancel
               </button>
-              <button onClick={handleRequestForm16} className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] shadow-md cursor-pointer">
-                Download Form 16 PDF
+              <button
+                onClick={() => {
+                  setShowFinanceTicketModal(false)
+                  setToast('Finance ticket submitted. Comptroller Secretariat ref: FIN-TKT-2026-884.')
+                  setTimeout(() => setToast(null), 5000)
+                }}
+                className="px-5 py-2 rounded-md brass-gradient text-[#1C1714] text-xs font-bold uppercase font-[var(--font-cinzel)] shadow-md cursor-pointer"
+              >
+                Submit Ticket
               </button>
             </div>
           </div>
