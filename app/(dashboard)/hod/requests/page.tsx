@@ -12,6 +12,7 @@ export default function HODRequestsPage() {
   const [remarksModal, setRemarksModal] = useState<{ reqId: string; action: 'Approved' | 'Rejected' } | null>(null)
   const [remarksText, setRemarksText] = useState('')
   const [toast, setToast] = useState<string | null>(null)
+  const [showWorkloadModal, setShowWorkloadModal] = useState(false)
 
   const handleExportCSV = () => {
     const exportData = filteredRequests.map(r => ({
@@ -100,13 +101,6 @@ export default function HODRequestsPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-          {(['All', 'Pending Review', 'Approved', 'Rejected'] as const).map(st => (
-            <button
-              key={st}
-              onClick={() => setFilterStatus(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-[var(--font-cinzel)] uppercase tracking-wider transition cursor-pointer ${
-                filterStatus === st
                   ? 'bg-[#1C1714] text-[#C9A962] border border-[#C9A962]/40 shadow-sm'
                   : 'bg-[#251E19] text-[#9C8B7A] border border-[#4A3F35] hover:border-[#C9A962]/40'
               }`}
@@ -275,6 +269,46 @@ export default function HODRequestsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showWorkloadModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <CheckSquare className="h-5 w-5 text-[#C9A962]" /> Faculty Workload Credit Inspector
+              </h3>
+              <button onClick={() => setShowWorkloadModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Weekly Teaching Load Distribution</span>
+              <div className="space-y-2 font-mono text-xs text-[#E8DFD4]">
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] flex justify-between">
+                  <span>Prof. D.P. Singh Sir</span>
+                  <span className="text-[#C9A962] font-bold">16 hrs/wk (Standard)</span>
+                </div>
+                <div className="p-3 rounded-lg border border-amber-500/40 bg-[#1C1714] flex justify-between">
+                  <span>Prof. Ananya Roy Ma'am</span>
+                  <span className="text-amber-400 font-bold">20 hrs/wk (Overload Warning)</span>
+                </div>
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#1C1714] flex justify-between">
+                  <span>Prof. Rajesh Kumar Sir</span>
+                  <span className="text-[#C9A962] font-bold">14 hrs/wk (Optimal)</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowWorkloadModal(false)
+                setToast('Teaching load rebalancing proposal dispatched to Dean Office.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Submit Workload Redistribution Plan
+            </button>
           </div>
         </div>
       )}
