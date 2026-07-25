@@ -7,6 +7,7 @@ import { LayoutDashboard, Users, CheckSquare, ShieldCheck, ClipboardList, Wrench
 export default function StaffDashboardPage() {
   const { tasks, addTask, updateTaskStatus } = useStaffTasksStore()
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showGatePassModal, setShowGatePassModal] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newLocation, setNewLocation] = useState('Academic Block A • Basement 2')
   const [newPriority, setNewPriority] = useState('Urgent Directive')
@@ -57,12 +58,20 @@ export default function StaffDashboardPage() {
             Execute statutory maintenance directives, supervise laboratory infrastructure, and manage examination logistical setups.
           </p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="px-5 py-2.5 rounded-xl brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer hover:opacity-95 transition shrink-0 font-[var(--font-cinzel)] uppercase tracking-wider"
-        >
-          <Plus className="h-4 w-4" /> Issue Maintenance Directive
-        </button>
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowGatePassModal(true)}
+            className="px-4 py-2.5 rounded-xl border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+          >
+            <span>🎫 Campus Visitor Gate Pass</span>
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-5 py-2.5 rounded-xl brass-gradient text-[#1C1714] text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer hover:opacity-95 transition shrink-0 font-[var(--font-cinzel)] uppercase tracking-wider"
+          >
+            <Plus className="h-4 w-4" /> Issue Maintenance Directive
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -224,6 +233,40 @@ export default function StaffDashboardPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showGatePassModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <Users className="h-5 w-5 text-[#C9A962]" /> Visitor Gate Pass & Vehicle Access Manager
+              </h3>
+              <button onClick={() => setShowGatePassModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] text-lg cursor-pointer">✕</button>
+            </div>
+            <div className="space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs font-semibold uppercase text-[#C9A962] font-[var(--font-cinzel)] block">Non-Academic Visitor Check-In</span>
+              <div className="space-y-2">
+                <input type="text" placeholder="Visitor Full Name" className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]" defaultValue="Dr. S. K. Roy (External Examiner)" />
+                <input type="text" placeholder="Vehicle Registration Number (e.g. UP16-AB-9012)" className="w-full rounded-md border border-[#4A3F35] bg-[#1C1714] text-[#E8DFD4] p-2.5 text-xs outline-none focus:border-[#C9A962]" defaultValue="DL-09-CX-1049" />
+              </div>
+              <div className="p-3 rounded-lg bg-[#1C1714] border border-[#C9A962]/40 text-xs font-mono text-[#C9A962] flex justify-between">
+                <span>Assigned Parking: Bay P-4</span>
+                <span>Gate Pass QR: #PASS-2026-881</span>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowGatePassModal(false)
+                setToast('Temporary Digital Gate Pass #PASS-2026-881 issued and sent to Main Gate Security.')
+                setTimeout(() => setToast(null), 4000)
+              }}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Issue Digital Gate Pass & Vehicle Badge
+            </button>
           </div>
         </div>
       )}
