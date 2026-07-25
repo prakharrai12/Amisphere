@@ -8,6 +8,7 @@ export default function StudentFeesPage() {
   const [showReceipt, setShowReceipt] = useState(false)
   const [showTaxDialog, setShowTaxDialog] = useState(false)
   const [showSimulator, setShowSimulator] = useState(false)
+  const [showEmiModal, setShowEmiModal] = useState(false)
   const [scholarshipPercent, setScholarshipPercent] = useState('25')
 
   const baseTuition = 125000
@@ -32,6 +33,12 @@ export default function StudentFeesPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setShowEmiModal(true)}
+              className="px-4 py-2.5 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
+            >
+              <span>Installment EMI Plan</span>
+            </button>
             <button
               onClick={() => setShowSimulator(true)}
               className="px-4 py-2.5 rounded-md border border-[#C9A962]/60 bg-[#1C1714] text-[#C9A962] hover:bg-[#C9A962]/10 text-xs font-semibold font-[var(--font-cinzel)] tracking-wider uppercase transition cursor-pointer"
@@ -296,6 +303,43 @@ export default function StudentFeesPage() {
               className="w-full py-2.5 rounded-md border border-emerald-500/60 bg-emerald-500/20 text-emerald-400 font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider"
             >
               Acknowledge & Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Installment EMI Modal */}
+      {showEmiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C1714]/85 backdrop-blur-md p-4 animate-fade-in">
+          <div className="rounded-2xl border-2 border-[#C9A962] bg-[#251E19] p-8 max-w-lg w-full shadow-2xl relative corner-flourish space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#4A3F35]">
+              <h3 className="font-normal text-xl font-[var(--font-serif)] text-[#E8DFD4] flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-[#C9A962]" /> Custom EMI Installment Scheduler
+              </h3>
+              <button onClick={() => setShowEmiModal(false)} className="text-[#9C8B7A] hover:text-[#E8DFD4] transition cursor-pointer">✕</button>
+            </div>
+            <div className="p-4 rounded-xl bg-[#1C1714] border border-[#4A3F35] space-y-3 font-[var(--font-crimson)] text-sm">
+              <span className="text-xs uppercase font-semibold text-[#C9A962] font-[var(--font-cinzel)] block">Bursar Approved Installment Options</span>
+              <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+                <div className="p-3 rounded-lg border border-[#C9A962]/40 bg-[#251E19] space-y-1">
+                  <span className="text-[10px] text-[#9C8B7A] uppercase block">2-Tranche Plan</span>
+                  <span className="text-base font-bold text-[#E8DFD4]">₹73,750 / sem</span>
+                  <span className="text-[10px] text-emerald-400 block">0% Interest Charge</span>
+                </div>
+                <div className="p-3 rounded-lg border border-[#4A3F35] bg-[#251E19] space-y-1">
+                  <span className="text-[10px] text-[#9C8B7A] uppercase block">4-Tranche Plan</span>
+                  <span className="text-base font-bold text-[#E8DFD4]">₹36,875 / qtr</span>
+                  <span className="text-[10px] text-[#C9A962] block">Nominal Processing Fee</span>
+                </div>
+              </div>
+              <p className="text-xs text-[#9C8B7A]">Submit formal request to Bursar Secretariat (Krashnkant Gupta Sir) for direct auto-debit setup.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowEmiModal(false)}
+              className="w-full py-2.5 rounded-md brass-gradient text-[#1C1714] font-semibold text-xs font-[var(--font-cinzel)] uppercase tracking-wider cursor-pointer"
+            >
+              Submit EMI Schedule Request
             </button>
           </div>
         </div>
